@@ -10,13 +10,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.shdwraze.metro.MetroApplication
-import com.shdwraze.metro.data.NetworkStationRepository
 import com.shdwraze.metro.data.StationRepository
+import com.shdwraze.metro.network.Station
 import kotlinx.coroutines.launch
 import java.io.IOException
 
 sealed interface MetroUiState {
-    data class Success(val stations: String) : MetroUiState
+    data class Success(val stations: List<Station>) : MetroUiState
     object Error : MetroUiState
     object Loading : MetroUiState
 }
@@ -33,11 +33,7 @@ class MetroViewModel(private val stationRepository: StationRepository) : ViewMod
     fun getStations() {
         viewModelScope.launch {
             metroUiState = try {
-                val listResult = stationRepository.getStations()
-
-                MetroUiState.Success(
-                    "Success: ${listResult.size} retrieved"
-                )
+                MetroUiState.Success(stationRepository.getStations())
             } catch (e: IOException) {
                 MetroUiState.Error
             }

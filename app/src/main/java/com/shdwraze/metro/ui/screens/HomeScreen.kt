@@ -2,12 +2,20 @@ package com.shdwraze.metro.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,7 +24,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.shdwraze.metro.R
+import com.shdwraze.metro.network.Station
 import com.shdwraze.metro.ui.theme.MetroTheme
 
 @Composable
@@ -25,13 +35,9 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     when (metroUiState) {
-        is MetroUiState.Success -> ResultScreen(
-            stations = metroUiState.stations,
-            modifier = modifier.fillMaxWidth()
-        )
-
+        is MetroUiState.Success -> StationsListScreen(metroUiState.stations, modifier)
         is MetroUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is MetroUiState.Error -> ErrorScreen(modifier = modifier.fillMaxSize())
+        else -> ErrorScreen(modifier = modifier.fillMaxSize())
     }
 }
 
@@ -63,18 +69,78 @@ fun LoadingScreen(modifier: Modifier) {
 }
 
 @Composable
-fun ResultScreen(stations: String, modifier: Modifier = Modifier) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
+fun StationsListScreen(
+    stations: List<Station>,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(4.dp)
     ) {
-        Text(text = stations)
+        items(items = stations, key = { station -> station.id }) { station ->
+            StationCard(
+                station = station,
+                modifier = modifier
+                    .padding(4.dp)
+                    .fillMaxWidth()
+            )
+        }
     }
 }
+
+@Composable
+fun StationCard(station: Station, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier
+            .width(575.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+    ) {
+        Text(
+            text = station.name,
+            fontSize = 24.sp,
+            modifier = Modifier
+                .padding(start = 16.dp, top = 16.dp)
+        )
+
+        Row(
+            modifier = Modifier
+                .padding(start = 16.dp, top = 8.dp)
+        ) {
+            Text(text = station.city)
+            Spacer(modifier = Modifier.width(32.dp))
+            Text(text = station.line)
+        }
+
+        Text(
+            text = if (station.transferTo != null) {
+                "Перехід на станцію ${station.transferTo}"
+            } else {
+                "Немає пересадки"
+            },
+            modifier = Modifier
+                .padding(start = 16.dp, top = 8.dp, bottom = 16.dp)
+        )
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
 fun Preview() {
     MetroTheme {
+        StationCard(
+            station = Station(
+                "Dsadsad",
+                "Держпром",
+                "Олексіївська лінія",
+                "Харків",
+                null,
+                null,
+                null
+            )
+        )
     }
 }
