@@ -33,7 +33,7 @@ fun MetroApp() {
                 .fillMaxSize()
                 .padding(it)
         ) {
-            val metroViewModel: MetroViewModel = viewModel()
+            val metroViewModel: MetroViewModel = viewModel(factory = MetroViewModel.Factory)
             HomeScreen(metroUiState = metroViewModel.metroUiState)
         }
     }

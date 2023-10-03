@@ -4,8 +4,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import com.shdwraze.metro.network.MetroApi
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.shdwraze.metro.MetroApplication
+import com.shdwraze.metro.data.NetworkStationRepository
+import com.shdwraze.metro.data.StationRepository
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -15,7 +21,7 @@ sealed interface MetroUiState {
     object Loading : MetroUiState
 }
 
-class MetroViewModel : ViewModel() {
+class MetroViewModel(private val stationRepository: StationRepository) : ViewModel() {
 
     var metroUiState: MetroUiState by mutableStateOf(MetroUiState.Loading)
         private set
@@ -26,15 +32,25 @@ class MetroViewModel : ViewModel() {
 
     fun getStations() {
         viewModelScope.launch {
-            try {
-                val listResult = MetroApi.retrofitService.getStations()
-                metroUiState = MetroUiState.Success(
+            metroUiState = try {
+                val listResult = stationRepository.getStations()
+
+                MetroUiState.Success(
                     "Success: ${listResult.size} retrieved"
                 )
             } catch (e: IOException) {
-                metroUiState = MetroUiState.Error
+                MetroUiState.Error
+            }
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as MetroApplication)
+                val stationRepository = application.container.stationRepository
+                MetroViewModel(stationRepository = stationRepository)
             }
         }
     }
 }
-
