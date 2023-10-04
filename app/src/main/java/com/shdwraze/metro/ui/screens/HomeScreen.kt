@@ -82,14 +82,17 @@ fun StationsListScreen(
                 station = station,
                 modifier = modifier
                     .padding(4.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                transferToStationName = station.transferTo?.let {
+                    stations.find { it.id == station.transferTo }?.name
+                }
             )
         }
     }
 }
 
 @Composable
-fun StationCard(station: Station, modifier: Modifier = Modifier) {
+fun StationCard(station: Station, modifier: Modifier = Modifier, transferToStationName: String?) {
     Card(
         modifier = modifier
             .width(575.dp),
@@ -116,7 +119,7 @@ fun StationCard(station: Station, modifier: Modifier = Modifier) {
 
         Text(
             text = if (station.transferTo != null) {
-                "Перехід на станцію ${station.transferTo}"
+                "Перехід на станцію $transferToStationName"
             } else {
                 "Немає пересадки"
             },
@@ -140,7 +143,8 @@ fun Preview() {
                 null,
                 null,
                 null
-            )
+            ),
+            transferToStationName = null
         )
     }
 }
