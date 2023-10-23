@@ -39,14 +39,4 @@ class MetroViewModel(private val stationRepository: StationRepository) : ViewMod
             }
         }
     }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[APPLICATION_KEY] as MetroApplication)
-                val stationRepository = application.container.stationRepository
-                MetroViewModel(stationRepository = stationRepository)
-            }
-        }
-    }
 }
