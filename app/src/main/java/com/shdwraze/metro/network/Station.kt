@@ -8,7 +8,13 @@ data class Station(
     val name: String,
     val line: String,
     val city: String,
-    val nextStationId: String?,
-    val prevStationId: String?,
-    val transferTo: String?
+    val nextStation: ShortStationInfo?,
+    val prevStation: ShortStationInfo?,
+    val transferTo: ShortStationInfo?
+)
+
+@Serializable
+data class ShortStationInfo(
+    val id: String,
+    val name: String
 )

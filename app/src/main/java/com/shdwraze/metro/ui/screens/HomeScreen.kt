@@ -83,9 +83,7 @@ fun StationsListScreen(
                 modifier = modifier
                     .padding(4.dp)
                     .fillMaxWidth(),
-                transferToStationName = station.transferTo?.let {
-                    stations.find { it.id == station.transferTo }?.name
-                }
+                transferToStationName = station.transferTo?.name
             )
         }
     }
