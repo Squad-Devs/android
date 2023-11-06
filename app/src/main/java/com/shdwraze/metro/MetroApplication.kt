@@ -1,15 +1,15 @@
 package com.shdwraze.metro
 
 import android.app.Application
-import com.shdwraze.metro.data.AppContainer
-import com.shdwraze.metro.data.DefaultAppContainer
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class MetroApplication : Application() {
 
-    lateinit var container: AppContainer
-
-    override fun onCreate() {
-        super.onCreate()
-        container = DefaultAppContainer()
-    }
+//    lateinit var container: AppContainer
+//
+//    override fun onCreate() {
+//        super.onCreate()
+//        container = DefaultAppContainer()
+//    }
 }

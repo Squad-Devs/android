@@ -5,18 +5,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shdwraze.metro.data.StationRepository
-import com.shdwraze.metro.network.Station
+import com.shdwraze.metro.data.repository.StationRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.IOException
+import javax.inject.Inject
 
-sealed interface MetroUiState {
-    data class Success(val stations: List<Station>) : MetroUiState
-    object Error : MetroUiState
-    object Loading : MetroUiState
-}
-
-class MetroViewModel(private val stationRepository: StationRepository) : ViewModel() {
+@HiltViewModel
+class MetroViewModel @Inject constructor(
+    private val stationRepository: StationRepository
+) : ViewModel() {
 
     var metroUiState: MetroUiState by mutableStateOf(MetroUiState.Loading)
         private set

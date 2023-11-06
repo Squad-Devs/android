@@ -1,4 +1,4 @@
-package com.shdwraze.metro.network
+package com.shdwraze.metro.data.model
 
 import kotlinx.serialization.Serializable
 

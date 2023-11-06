@@ -1,4 +1,4 @@
-package com.shdwraze.metro.presentation.utils
+package com.shdwraze.metro.utils
 
 import androidx.compose.ui.unit.dp
 

@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.shdwraze.metro.network.Station
+import com.shdwraze.metro.data.model.Station
 import com.shdwraze.metro.presentation.ui.components.metro.station.StationCard
 import com.shdwraze.metro.presentation.ui.components.metro.station.StationsList
 import com.shdwraze.metro.presentation.ui.screens.common.error.ErrorScreen
