@@ -1,5 +1,6 @@
-package com.shdwraze.metro.network
+package com.shdwraze.metro.data.api
 
+import com.shdwraze.metro.data.model.Station
 import retrofit2.http.GET
 import retrofit2.http.Query
 

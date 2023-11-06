@@ -1,4 +1,4 @@
-package com.shdwraze.metro.ui.components
+package com.shdwraze.metro.presentation.ui.components.metro.station
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.shdwraze.metro.network.Station
+import com.shdwraze.metro.data.model.Station
+import com.shdwraze.metro.common.utils.Dimens.LargePadding32
+import com.shdwraze.metro.common.utils.Dimens.MediumPadding16
+import com.shdwraze.metro.common.utils.Dimens.SmallPadding8
 
 @Composable
 fun StationCard(station: Station, modifier: Modifier = Modifier, transferToStationName: String?) {
@@ -28,15 +31,15 @@ fun StationCard(station: Station, modifier: Modifier = Modifier, transferToStati
             text = station.name,
             fontSize = 24.sp,
             modifier = Modifier
-                .padding(start = 16.dp, top = 16.dp)
+                .padding(start = MediumPadding16, top = MediumPadding16)
         )
 
         Row(
             modifier = Modifier
-                .padding(start = 16.dp, top = 8.dp)
+                .padding(start = MediumPadding16, top = SmallPadding8)
         ) {
             Text(text = station.city)
-            Spacer(modifier = Modifier.width(32.dp))
+            Spacer(modifier = Modifier.width(LargePadding32))
             Text(text = station.line)
         }
 
@@ -47,7 +50,7 @@ fun StationCard(station: Station, modifier: Modifier = Modifier, transferToStati
                 "Немає пересадки"
             },
             modifier = Modifier
-                .padding(start = 16.dp, top = 8.dp, bottom = 16.dp)
+                .padding(start = MediumPadding16, top = SmallPadding8, bottom = MediumPadding16)
         )
     }
 }

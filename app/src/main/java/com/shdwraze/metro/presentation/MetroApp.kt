@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.shdwraze.metro.ui
+package com.shdwraze.metro.presentation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,8 +18,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.shdwraze.metro.R
-import com.shdwraze.metro.ui.screens.HomeScreen
-import com.shdwraze.metro.ui.screens.MetroViewModel
+import com.shdwraze.metro.presentation.ui.screens.metro.HomeScreen
+import com.shdwraze.metro.presentation.ui.screens.metro.MetroViewModel
 
 @Composable
 fun MetroApp() {
@@ -33,7 +33,7 @@ fun MetroApp() {
                 .fillMaxSize()
                 .padding(it)
         ) {
-            val metroViewModel: MetroViewModel = viewModel(factory = AppViewModelProvider.Factory)
+            val metroViewModel: MetroViewModel = viewModel()
             HomeScreen(metroUiState = metroViewModel.metroUiState)
         }
     }

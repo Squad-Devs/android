@@ -1,4 +1,4 @@
-package com.shdwraze.metro.ui.theme
+package com.shdwraze.metro.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
