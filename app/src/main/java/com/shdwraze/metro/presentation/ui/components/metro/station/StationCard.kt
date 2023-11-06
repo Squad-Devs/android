@@ -13,9 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shdwraze.metro.data.model.Station
-import com.shdwraze.metro.utils.Dimens.LargePadding32
-import com.shdwraze.metro.utils.Dimens.MediumPadding16
-import com.shdwraze.metro.utils.Dimens.SmallPadding8
+import com.shdwraze.metro.common.utils.Dimens.LargePadding32
+import com.shdwraze.metro.common.utils.Dimens.MediumPadding16
+import com.shdwraze.metro.common.utils.Dimens.SmallPadding8
 
 @Composable
 fun StationCard(station: Station, modifier: Modifier = Modifier, transferToStationName: String?) {

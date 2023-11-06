@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.shdwraze.metro.data.model.Station
-import com.shdwraze.metro.utils.Dimens.SmallPadding4
+import com.shdwraze.metro.common.utils.Dimens.SmallPadding4
 
 @Composable
 fun StationsList(

@@ -12,7 +12,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.shdwraze.metro.R
-import com.shdwraze.metro.utils.Dimens.MediumPadding16
+import com.shdwraze.metro.common.utils.Dimens.MediumPadding16
 
 @Composable
 fun ErrorScreen(modifier: Modifier) {
