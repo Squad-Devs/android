@@ -1,4 +1,4 @@
-package com.shdwraze.metro
+package com.shdwraze.metro.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.shdwraze.metro.ui.MetroApp
-import com.shdwraze.metro.ui.theme.MetroTheme
+import com.shdwraze.metro.presentation.MetroApp
+import com.shdwraze.metro.presentation.ui.theme.MetroTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

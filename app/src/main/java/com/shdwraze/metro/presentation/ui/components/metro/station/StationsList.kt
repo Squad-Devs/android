@@ -1,4 +1,4 @@
-package com.shdwraze.metro.ui.components
+package com.shdwraze.metro.presentation.ui.components.metro.station
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.shdwraze.metro.network.Station
+import com.shdwraze.metro.presentation.utils.Dimens.SmallPadding4
 
 @Composable
 fun StationsList(
@@ -17,13 +18,13 @@ fun StationsList(
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(4.dp)
+        contentPadding = PaddingValues(SmallPadding4)
     ) {
         items(items = stations, key = { station -> station.id }) { station ->
             StationCard(
                 station = station,
                 modifier = modifier
-                    .padding(4.dp)
+                    .padding(SmallPadding4)
                     .fillMaxWidth(),
                 transferToStationName = station.transferTo?.name
             )

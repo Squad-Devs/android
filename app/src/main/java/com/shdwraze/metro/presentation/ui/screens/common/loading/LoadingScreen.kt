@@ -1,4 +1,4 @@
-package com.shdwraze.metro.ui.screens
+package com.shdwraze.metro.presentation.ui.screens.common.loading
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearOutSlowInEasing
