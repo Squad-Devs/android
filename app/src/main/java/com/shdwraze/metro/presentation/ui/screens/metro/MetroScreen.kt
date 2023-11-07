@@ -12,7 +12,7 @@ import com.shdwraze.metro.presentation.ui.screens.common.loading.LoadingScreen
 import com.shdwraze.metro.presentation.ui.theme.MetroTheme
 
 @Composable
-fun HomeScreen(
+fun MetroScreen(
     metroUiState: MetroUiState,
     modifier: Modifier = Modifier
 ) {
