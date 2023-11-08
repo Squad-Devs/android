@@ -1,5 +1,6 @@
 package com.shdwraze.metro.presentation.ui.components.metro.station
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -12,16 +13,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.shdwraze.metro.data.model.Station
 import com.shdwraze.metro.common.utils.Dimens.LargePadding32
 import com.shdwraze.metro.common.utils.Dimens.MediumPadding16
 import com.shdwraze.metro.common.utils.Dimens.SmallPadding8
+import com.shdwraze.metro.data.model.Station
 
 @Composable
-fun StationCard(station: Station, modifier: Modifier = Modifier, transferToStationName: String?) {
+fun StationCard(
+    station: Station, modifier: Modifier = Modifier,
+    transferToStationName: String?,
+    onStationClick: (Station) -> Unit
+) {
     Card(
         modifier = modifier
-            .width(575.dp),
+            .width(575.dp)
+            .clickable {
+                onStationClick(station)
+            },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         ),

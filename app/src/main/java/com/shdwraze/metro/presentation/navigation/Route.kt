@@ -5,7 +5,7 @@ sealed class Route(
 ) {
     object MetroScreen : Route(route = "metroScreen")
 
-    object StationScreen : Route(route = "stationScreen")
+    object StationScreen : Route(route = "stationScreen/{stationId}")
 
     object AppStartNavigation: Route(route = "appStartNavigation")
 }

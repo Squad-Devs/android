@@ -7,13 +7,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.shdwraze.metro.data.model.Station
 import com.shdwraze.metro.common.utils.Dimens.SmallPadding4
+import com.shdwraze.metro.data.model.Station
 
 @Composable
 fun StationsList(
     stations: List<Station>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onStationClick: (Station) -> Unit
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -25,7 +26,8 @@ fun StationsList(
                 modifier = modifier
                     .padding(SmallPadding4)
                     .fillMaxWidth(),
-                transferToStationName = station.transferTo?.name
+                transferToStationName = station.transferTo?.name,
+                onStationClick = onStationClick
             )
         }
     }

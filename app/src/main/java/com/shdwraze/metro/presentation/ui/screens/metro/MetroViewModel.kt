@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shdwraze.metro.common.Constants.DEFAULT_CITY
+import com.shdwraze.metro.data.model.Station
 import com.shdwraze.metro.domain.usecase.station.GetStationsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
@@ -21,11 +22,13 @@ class MetroViewModel @Inject constructor(
     var metroUiState: MetroUiState by mutableStateOf(MetroUiState.Loading)
         private set
 
+    var currentStation = mutableStateOf<Station?>(null)
+
     init {
         getStations()
     }
 
-    fun getStations() {
+    private fun getStations() {
         viewModelScope.launch {
             metroUiState = try {
                 MetroUiState.Success(getStationsUseCase.invoke(DEFAULT_CITY).first())
@@ -33,5 +36,9 @@ class MetroViewModel @Inject constructor(
                 MetroUiState.Error
             }
         }
+    }
+
+    fun setCurrentStation(station: Station) {
+        currentStation.value = station
     }
 }

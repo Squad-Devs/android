@@ -11,18 +11,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.shdwraze.metro.presentation.ui.components.common.MetroTopAppBar
 import com.shdwraze.metro.presentation.ui.screens.metro.MetroScreen
 import com.shdwraze.metro.presentation.ui.screens.metro.MetroViewModel
+import com.shdwraze.metro.presentation.ui.screens.station.StationScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavGraph() {
     val navController = rememberNavController()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
+    val metroViewModel: MetroViewModel = hiltViewModel()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -43,8 +48,22 @@ fun NavGraph() {
                     startDestination = Route.MetroScreen.route
                 ) {
                     composable(route = Route.MetroScreen.route) {
-                        val metroViewModel: MetroViewModel = hiltViewModel()
-                        MetroScreen(metroUiState = metroViewModel.metroUiState)
+                        MetroScreen(
+                            metroUiState = metroViewModel.metroUiState,
+                            onStationClick = { station ->
+                                metroViewModel.setCurrentStation(station)
+                                navController.navigate(Route.StationScreen.route)
+                            }
+                        )
+                    }
+
+                    composable(
+                        route = Route.StationScreen.route,
+                        arguments = listOf(navArgument("stationId") {
+                            type = NavType.StringType
+                        })
+                    ) {
+                        StationScreen(station = metroViewModel.currentStation.value!!)
                     }
                 }
             }

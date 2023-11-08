@@ -14,10 +14,16 @@ import com.shdwraze.metro.presentation.ui.theme.MetroTheme
 @Composable
 fun MetroScreen(
     metroUiState: MetroUiState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onStationClick: (Station) -> Unit
 ) {
     when (metroUiState) {
-        is MetroUiState.Success -> StationsList(metroUiState.stations, modifier)
+        is MetroUiState.Success -> StationsList(
+            metroUiState.stations,
+            modifier,
+            onStationClick
+        )
+
         is MetroUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
         else -> ErrorScreen(modifier = modifier.fillMaxSize())
     }
@@ -37,7 +43,8 @@ fun Preview() {
                 null,
                 null
             ),
-            transferToStationName = null
+            transferToStationName = null,
+            onStationClick = {}
         )
     }
 }
