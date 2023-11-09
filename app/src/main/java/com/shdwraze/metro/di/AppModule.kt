@@ -1,6 +1,7 @@
 package com.shdwraze.metro.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.shdwraze.metro.common.Constants.SERVER_URL
 import com.shdwraze.metro.data.api.MetroApiService
 import com.shdwraze.metro.data.repository.NetworkStationRepository
 import com.shdwraze.metro.data.repository.StationRepository
@@ -23,7 +24,7 @@ object AppModule {
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
             .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-            .baseUrl("https://backend-service-bizc.onrender.com")
+            .baseUrl(SERVER_URL)
             .build()
     }
 
