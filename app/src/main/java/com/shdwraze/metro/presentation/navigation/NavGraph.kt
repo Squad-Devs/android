@@ -8,12 +8,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.shdwraze.metro.presentation.ui.components.common.MetroTopAppBar
@@ -25,9 +27,13 @@ import com.shdwraze.metro.presentation.ui.screens.station.StationScreen
 @Composable
 fun NavGraph() {
     val navController = rememberNavController()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val backStackEntry by navController.currentBackStackEntryAsState()
+
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     val metroViewModel: MetroViewModel = hiltViewModel()
+
+    val currentScreen = backStackEntry?.destination?.route ?: Route.MetroScreen.route
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -36,7 +42,15 @@ fun NavGraph() {
 
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = { MetroTopAppBar(scrollBehavior = scrollBehavior) }
+            topBar = {
+                MetroTopAppBar(
+                    scrollBehavior = scrollBehavior,
+                    canNavigateBack = navController.previousBackStackEntry != null,
+                    navigateUp = {
+                        navController.navigateUp()
+                    }
+                )
+            }
         ) {
             Surface(
                 modifier = Modifier

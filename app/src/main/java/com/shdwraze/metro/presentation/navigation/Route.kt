@@ -8,4 +8,14 @@ sealed class Route(
     object StationScreen : Route(route = "stationScreen/{stationId}")
 
     object AppStartNavigation: Route(route = "appStartNavigation")
+
+    fun getRouteByName(name: String): Route? {
+        return when (name) {
+            "metroScreen" -> MetroScreen
+            "stationScreen" -> StationScreen
+            "appStartNavigation" -> AppStartNavigation
+            else -> null
+        }
+    }
+
 }
