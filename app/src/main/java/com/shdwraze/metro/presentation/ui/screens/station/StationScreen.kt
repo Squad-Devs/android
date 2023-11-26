@@ -13,6 +13,8 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +32,7 @@ fun StationScreen(
 ) {
     val nextStation = station.nextStation
     val prevStation = station.prevStation
+    val transferTo = station.transferTo
 
     Box(
         modifier = Modifier
@@ -42,6 +45,14 @@ fun StationScreen(
         ) {
             StationDetailsTitle(name = station.name)
             StationDetailsLine(line = station.line)
+            if (transferTo != null) {
+                Spacer(modifier = Modifier.size(8.dp))
+                TextButton(onClick = { transferTo.let { onButtonClick(it.id) } }) {
+                    Text(text = "Перехід на станцію ${transferTo.name}")
+                }
+            } else {
+                Spacer(modifier = Modifier.size(48.dp))
+            }
             Spacer(modifier = Modifier.size(16.dp))
             Row(
                 horizontalArrangement = Arrangement.spacedBy(32.dp)
@@ -75,7 +86,9 @@ fun Preview() {
                 prevStation = ShortStationInfo(
                     id = "Vv0QmA8fYHpNqI0rgR4S", name = "Холодна гора"
                 ),
-                transferTo = null
+                transferTo = ShortStationInfo(
+                    id = "Vv0QmA8fYHpNqI0rgR4S", name = "Холодна гора"
+                )
             )
         )
     }
