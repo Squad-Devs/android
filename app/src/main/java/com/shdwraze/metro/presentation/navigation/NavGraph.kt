@@ -77,7 +77,10 @@ fun NavGraph() {
                             type = NavType.StringType
                         })
                     ) {
-                        StationScreen(station = metroViewModel.currentStation.value!!)
+                        StationScreen(station = metroViewModel.currentStation.value!!,
+                            onButtonClick = { stationId ->
+                                metroViewModel.findStationById(stationId)
+                            })
                     }
                 }
             }

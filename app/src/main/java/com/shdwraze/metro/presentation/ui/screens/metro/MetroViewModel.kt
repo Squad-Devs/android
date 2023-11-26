@@ -38,6 +38,13 @@ class MetroViewModel @Inject constructor(
         }
     }
 
+    fun findStationById(stationId: String) {
+        if (metroUiState is MetroUiState.Success) {
+            currentStation.value =
+                (metroUiState as MetroUiState.Success).stations.find { it.id == stationId }
+        }
+    }
+
     fun setCurrentStation(station: Station) {
         currentStation.value = station
     }
