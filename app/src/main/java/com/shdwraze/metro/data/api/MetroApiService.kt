@@ -8,7 +8,8 @@ import retrofit2.http.Query
 
 interface MetroApiService {
     @GET("stations")
-    suspend fun getStations(@Query("city") city: String = DEFAULT_CITY): List<Station>
+    suspend fun getStations(@Query("city") city: String = DEFAULT_CITY,
+                            @Query("line") line: String? = null): List<Station>
 
     @GET("stations/{id}")
     suspend fun getStationById(@Path("id") id: String): Station

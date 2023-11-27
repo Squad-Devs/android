@@ -50,7 +50,10 @@ fun NavGraph() {
                         navController.navigateUp()
                     },
                     isActionsActive = currentScreen == Route.MetroScreen.route,
-                    lines = metroViewModel.lines
+                    lines = metroViewModel.lines,
+                    onDropdownItemClick = {
+                        metroViewModel.getStations(it)
+                    }
                 )
             }
         ) {

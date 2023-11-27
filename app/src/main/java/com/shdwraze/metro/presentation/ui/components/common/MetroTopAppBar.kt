@@ -28,7 +28,8 @@ fun MetroTopAppBar(
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     isActionsActive: Boolean = true,
-    lines: List<String> = listOf("A", "B", "C")
+    lines: List<String> = listOf("A", "B", "C"),
+    onDropdownItemClick: (String) -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -64,7 +65,11 @@ fun MetroTopAppBar(
                     onDismissRequest = {
                         expanded = false
                     },
-                    lines = lines
+                    lines = lines,
+                    onDropdownItemClick = {
+                        expanded = false
+                        onDropdownItemClick(it)
+                    }
                 )
             }
         }

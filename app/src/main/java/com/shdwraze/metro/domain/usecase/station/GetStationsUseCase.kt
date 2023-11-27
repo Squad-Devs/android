@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetStationsUseCase @Inject constructor(
     private val stationRepository: StationRepository
 ) {
-    operator fun invoke(city: String): Flow<List<Station>> = flow {
-        emit(stationRepository.getStations())
+    operator fun invoke(city: String, line: String?): Flow<List<Station>> = flow {
+        emit(stationRepository.getStations(city, line))
     }
 }

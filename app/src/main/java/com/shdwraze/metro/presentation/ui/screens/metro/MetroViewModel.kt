@@ -34,10 +34,10 @@ class MetroViewModel @Inject constructor(
         getStations()
     }
 
-    private fun getStations() {
+    fun getStations(line: String? = null) {
         viewModelScope.launch {
             metroUiState = try {
-                MetroUiState.Success(getStationsUseCase.invoke(DEFAULT_CITY).first())
+                MetroUiState.Success(getStationsUseCase.invoke(DEFAULT_CITY, line).first())
             } catch (e: IOException) {
                 MetroUiState.Error
             }
