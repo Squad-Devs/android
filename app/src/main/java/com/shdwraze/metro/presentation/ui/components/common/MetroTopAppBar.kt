@@ -10,16 +10,28 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.shdwraze.metro.R
+import com.shdwraze.metro.presentation.ui.components.metro.LinesDropdownMenu
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MetroTopAppBar(scrollBehavior: TopAppBarScrollBehavior,
-                   modifier: Modifier = Modifier,
-                   canNavigateBack: Boolean,
-                   navigateUp: () -> Unit) {
+fun MetroTopAppBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    modifier: Modifier = Modifier,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
+    isActionsActive: Boolean = true,
+    lines: List<String> = listOf("A", "B", "C")
+) {
+    var expanded by remember { mutableStateOf(false) }
+
     CenterAlignedTopAppBar(
         scrollBehavior = scrollBehavior,
         title = {
@@ -37,6 +49,23 @@ fun MetroTopAppBar(scrollBehavior: TopAppBarScrollBehavior,
                         contentDescription = null
                     )
                 }
+            }
+        },
+        actions = {
+            if (isActionsActive) {
+                IconButton(onClick = { expanded = true }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_icon_sort),
+                        contentDescription = null
+                    )
+                }
+                LinesDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {
+                        expanded = false
+                    },
+                    lines = lines
+                )
             }
         }
     )

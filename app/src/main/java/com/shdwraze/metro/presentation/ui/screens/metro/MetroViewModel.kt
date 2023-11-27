@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shdwraze.metro.common.Constants.DEFAULT_CITY
 import com.shdwraze.metro.data.model.Station
+import com.shdwraze.metro.domain.usecase.common.GetLinesUseCase
 import com.shdwraze.metro.domain.usecase.station.GetStationsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MetroViewModel @Inject constructor(
-    private val getStationsUseCase: GetStationsUseCase
+    private val getStationsUseCase: GetStationsUseCase,
+    private val getLinesUseCase: GetLinesUseCase
 ) : ViewModel() {
 
     var metroUiState: MetroUiState by mutableStateOf(MetroUiState.Loading)
@@ -24,7 +26,11 @@ class MetroViewModel @Inject constructor(
 
     var currentStation = mutableStateOf<Station?>(null)
 
+    var lines by mutableStateOf<List<String>>(emptyList())
+        private set
+
     init {
+        getLines()
         getStations()
     }
 
@@ -35,6 +41,17 @@ class MetroViewModel @Inject constructor(
             } catch (e: IOException) {
                 MetroUiState.Error
             }
+        }
+    }
+
+    private fun getLines() {
+        viewModelScope.launch {
+            val newLines = try {
+                getLinesUseCase.invoke().first()
+            } catch (e: Exception) {
+                emptyList()
+            }
+            lines = newLines
         }
     }
 

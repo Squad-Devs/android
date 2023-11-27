@@ -48,7 +48,9 @@ fun NavGraph() {
                     canNavigateBack = navController.previousBackStackEntry != null,
                     navigateUp = {
                         navController.navigateUp()
-                    }
+                    },
+                    isActionsActive = currentScreen == Route.MetroScreen.route,
+                    lines = metroViewModel.lines
                 )
             }
         ) {
