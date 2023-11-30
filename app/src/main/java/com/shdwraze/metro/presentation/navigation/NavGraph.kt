@@ -22,16 +22,18 @@ import com.shdwraze.metro.presentation.ui.components.common.MetroTopAppBar
 import com.shdwraze.metro.presentation.ui.screens.metro.MetroScreen
 import com.shdwraze.metro.presentation.ui.screens.metro.MetroViewModel
 import com.shdwraze.metro.presentation.ui.screens.station.StationScreen
+import com.shdwraze.metro.presentation.ui.screens.station.StationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NavGraph() {
+fun NavGraph(
+    metroViewModel: MetroViewModel = hiltViewModel(),
+    stationViewModel: StationViewModel = hiltViewModel()
+) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
-    val metroViewModel: MetroViewModel = hiltViewModel()
 
     val currentScreen = backStackEntry?.destination?.route ?: Route.MetroScreen.route
 
@@ -70,7 +72,7 @@ fun NavGraph() {
                         MetroScreen(
                             metroUiState = metroViewModel.metroUiState,
                             onStationClick = { station ->
-                                metroViewModel.setCurrentStation(station)
+                                stationViewModel.setCurrentStation(station)
                                 navController.navigate(Route.StationScreen.route)
                             }
                         )
@@ -82,9 +84,9 @@ fun NavGraph() {
                             type = NavType.StringType
                         })
                     ) {
-                        StationScreen(station = metroViewModel.currentStation.value!!,
+                        StationScreen(station = stationViewModel.currentStation.value!!,
                             onButtonClick = { stationId ->
-                                metroViewModel.findStationById(stationId)
+                                stationViewModel.findStationById(stationId)
                             })
                     }
                 }

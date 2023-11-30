@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shdwraze.metro.common.Constants.DEFAULT_CITY
-import com.shdwraze.metro.data.model.Station
 import com.shdwraze.metro.domain.usecase.common.GetLinesUseCase
 import com.shdwraze.metro.domain.usecase.station.GetStationsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,8 +22,6 @@ class MetroViewModel @Inject constructor(
 
     var metroUiState: MetroUiState by mutableStateOf(MetroUiState.Loading)
         private set
-
-    var currentStation = mutableStateOf<Station?>(null)
 
     var lines by mutableStateOf<List<String>>(emptyList())
         private set
@@ -53,16 +50,5 @@ class MetroViewModel @Inject constructor(
             }
             lines = newLines
         }
-    }
-
-    fun findStationById(stationId: String) {
-        if (metroUiState is MetroUiState.Success) {
-            currentStation.value =
-                (metroUiState as MetroUiState.Success).stations.find { it.id == stationId }
-        }
-    }
-
-    fun setCurrentStation(station: Station) {
-        currentStation.value = station
     }
 }
