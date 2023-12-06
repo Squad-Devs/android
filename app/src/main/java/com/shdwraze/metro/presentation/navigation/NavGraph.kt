@@ -37,60 +37,55 @@ fun NavGraph(
 
     val currentScreen = backStackEntry?.destination?.route ?: Route.MetroScreen.route
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            MetroTopAppBar(
+                scrollBehavior = scrollBehavior,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = {
+                    navController.navigateUp()
+                },
+                isActionsActive = currentScreen == Route.MetroScreen.route,
+                lines = metroViewModel.lines,
+                onDropdownItemClick = { line ->
+                    metroViewModel.getStations(line)
+                }
+            )
+        }
     ) {
-
-        Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = {
-                MetroTopAppBar(
-                    scrollBehavior = scrollBehavior,
-                    canNavigateBack = navController.previousBackStackEntry != null,
-                    navigateUp = {
-                        navController.navigateUp()
-                    },
-                    isActionsActive = currentScreen == Route.MetroScreen.route,
-                    lines = metroViewModel.lines,
-                    onDropdownItemClick = {
-                        metroViewModel.getStations(it)
+        NavHost(
+            navController = navController,
+            startDestination = Route.MetroScreen.route,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        ) {
+            composable(route = Route.MetroScreen.route) {
+                MetroScreen(
+                    onStationClick = { station ->
+                        stationViewModel.setCurrentStation(station)
+                        navController.navigate(Route.StationScreen.route)
                     }
                 )
             }
-        ) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-            ) {
-                NavHost(
-                    navController = navController,
-                    startDestination = Route.MetroScreen.route
-                ) {
-                    composable(route = Route.MetroScreen.route) {
-                        MetroScreen(
-                            metroUiState = metroViewModel.metroUiState,
-                            onStationClick = { station ->
-                                stationViewModel.setCurrentStation(station)
-                                navController.navigate(Route.StationScreen.route)
-                            }
-                        )
-                    }
 
-                    composable(
-                        route = Route.StationScreen.route,
-                        arguments = listOf(navArgument("stationId") {
-                            type = NavType.StringType
-                        })
-                    ) {
-                        StationScreen(station = stationViewModel.currentStation.value!!,
-                            onButtonClick = { stationId ->
-                                stationViewModel.findStationById(stationId)
-                            })
+            composable(
+                route = Route.StationScreen.route,
+                arguments = listOf(navArgument("stationId") {
+                    type = NavType.StringType
+                })
+            ) {
+                StationScreen(
+                    station = stationViewModel.currentStation.value!!,
+                    onButtonClick = { stationId ->
+                        stationViewModel.findStationById(stationId)
                     }
-                }
+                )
             }
         }
+
     }
 }

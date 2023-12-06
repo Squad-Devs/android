@@ -53,6 +53,9 @@ android {
 }
 
 dependencies {
+    // Collect with lifecycle
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.5")
 

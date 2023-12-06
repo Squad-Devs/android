@@ -1,9 +1,13 @@
 package com.shdwraze.metro.presentation.ui.screens.metro
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shdwraze.metro.data.model.Station
 import com.shdwraze.metro.presentation.ui.components.metro.station.StationCard
 import com.shdwraze.metro.presentation.ui.components.metro.station.StationsList
@@ -13,19 +17,26 @@ import com.shdwraze.metro.presentation.ui.theme.MetroTheme
 
 @Composable
 fun MetroScreen(
-    metroUiState: MetroUiState,
-    modifier: Modifier = Modifier,
+    metroViewModel: MetroViewModel = hiltViewModel(),
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     onStationClick: (Station) -> Unit
 ) {
-    when (metroUiState) {
-        is MetroUiState.Success -> StationsList(
-            metroUiState.stations,
-            modifier,
-            onStationClick
-        )
+    val metroUiState by metroViewModel.metroUiState.collectAsStateWithLifecycle()
 
-        is MetroUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        else -> ErrorScreen(modifier = modifier.fillMaxSize())
+    when {
+        metroUiState.isLoading -> {
+            LoadingScreen(modifier = modifier.fillMaxSize())
+        }
+        metroUiState.isError -> {
+            ErrorScreen(modifier = modifier.fillMaxSize())
+        }
+        else -> {
+            StationsList(
+                metroUiState.stations,
+                modifier,
+                onStationClick
+            )
+        }
     }
 }
 

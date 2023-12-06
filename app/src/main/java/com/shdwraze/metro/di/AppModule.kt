@@ -3,10 +3,7 @@ package com.shdwraze.metro.di
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.shdwraze.metro.common.Constants.SERVER_URL
 import com.shdwraze.metro.data.api.MetroApiService
-import com.shdwraze.metro.data.repository.CommonRepository
-import com.shdwraze.metro.data.repository.NetworkCommonRepository
-import com.shdwraze.metro.data.repository.NetworkStationRepository
-import com.shdwraze.metro.data.repository.StationRepository
+import com.shdwraze.metro.data.api.result.ApiSafeCaller
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,13 +35,5 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideStationRepository(metroApiService: MetroApiService): StationRepository {
-        return NetworkStationRepository(metroApiService)
-    }
-
-    @Provides
-    @Singleton
-    fun provideCommonRepository(metroApiService: MetroApiService): CommonRepository {
-        return NetworkCommonRepository(metroApiService)
-    }
+    fun provideApiSafeCaller(): ApiSafeCaller = ApiSafeCaller
 }
