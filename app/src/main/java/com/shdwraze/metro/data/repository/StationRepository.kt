@@ -1,5 +1,6 @@
 package com.shdwraze.metro.data.repository
 
+import android.util.Log
 import com.shdwraze.metro.data.api.MetroApiService
 import com.shdwraze.metro.data.api.result.ApiResult
 import com.shdwraze.metro.data.api.result.ApiSafeCaller
@@ -17,10 +18,11 @@ class NetworkStationRepository @Inject constructor(
     private val metroApiService: MetroApiService,
     private val apiSafeCaller: ApiSafeCaller
 ) : StationRepository {
-    override suspend fun getStations(city: String, line: String?): ApiResult<List<Station>> =
-        apiSafeCaller.safeApiCall(Dispatchers.IO) {
-            metroApiService.getStations()
+    override suspend fun getStations(city: String, line: String?): ApiResult<List<Station>> {
+        return apiSafeCaller.safeApiCall(Dispatchers.IO) {
+            metroApiService.getStations(city, line)
         }
+    }
 
     override suspend fun getStationById(id: String): ApiResult<Station> =
         apiSafeCaller.safeApiCall(Dispatchers.IO) {
