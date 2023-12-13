@@ -19,9 +19,7 @@ import com.shdwraze.metro.presentation.ui.screens.station.StationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NavGraph(
-    stationViewModel: StationViewModel = hiltViewModel()
-) {
+fun NavGraph() {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
 
@@ -37,9 +35,8 @@ fun NavGraph(
     ) {
         composable(route = Route.MetroScreen.route) {
             MetroScreen(
-                onStationClick = { station ->
-                    stationViewModel.setCurrentStation(station)
-                    navController.navigate(Route.StationScreen.route)
+                onStationClick = { stationId ->
+                    navController.navigate("${Route.StationScreen.route}$stationId")
                 },
                 scrollBehavior = scrollBehavior,
                 canNavigateBack = navController.previousBackStackEntry != null,
@@ -51,19 +48,22 @@ fun NavGraph(
         }
 
         composable(
-            route = Route.StationScreen.route,
+            route = Route.StationScreen.route + STATION_SCREEN_PATH,
             arguments = listOf(navArgument("stationId") {
                 type = NavType.StringType
             })
         ) {
-            StationScreen(
-                scrollBehavior = scrollBehavior,
-                canNavigateBack = navController.previousBackStackEntry != null,
-                isActionsActive = currentScreen == Route.MetroScreen.route,
-                navigateUp = {
-                    navController.navigateUp()
-                }
-            )
+            backStackEntry?.arguments?.getString("stationId")?.let { stationId ->
+                StationScreen(
+                    stationId = stationId,
+                    scrollBehavior = scrollBehavior,
+                    canNavigateBack = navController.previousBackStackEntry != null,
+                    isActionsActive = currentScreen == Route.MetroScreen.route,
+                    navigateUp = {
+                        navController.navigateUp()
+                    }
+                )
+            }
         }
     }
 

@@ -23,15 +23,16 @@ import com.shdwraze.metro.data.model.Station
 
 @Composable
 fun StationCard(
-    station: Station, modifier: Modifier = Modifier,
+    station: Station,
+    modifier: Modifier = Modifier,
     transferToStationName: String?,
-    onStationClick: (Station) -> Unit
+    onStationClick: (String) -> Unit
 ) {
     OutlinedCard(
         modifier = modifier
             .width(575.dp)
             .clickable {
-                onStationClick(station)
+                onStationClick(station.id)
             },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface

@@ -27,7 +27,7 @@ import com.shdwraze.metro.presentation.ui.theme.MetroTheme
 fun MetroScreen(
     metroViewModel: MetroViewModel = hiltViewModel(),
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
-    onStationClick: (Station) -> Unit,
+    onStationClick: (String) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     canNavigateBack: Boolean = true,
     navigateUp: () -> Unit = {},

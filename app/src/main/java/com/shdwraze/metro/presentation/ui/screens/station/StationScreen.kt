@@ -22,6 +22,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,12 +39,17 @@ import com.shdwraze.metro.presentation.ui.theme.MetroTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StationScreen(
+    stationId: String = "",
     stationViewModel: StationViewModel = hiltViewModel(),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     canNavigateBack: Boolean = true,
     navigateUp: () -> Unit = {},
     isActionsActive: Boolean = false
 ) {
+    LaunchedEffect(stationId) {
+        stationViewModel.getStationById(stationId)
+        Log.d("DEBUG", "---- INVOKE GET STATION BY ID $stationId")
+    }
     val stationUiState by stationViewModel.stationUiState.collectAsStateWithLifecycle()
 
     val station = stationUiState.station

@@ -14,7 +14,7 @@ import com.shdwraze.metro.data.model.Station
 fun StationsList(
     stations: List<Station>,
     modifier: Modifier = Modifier,
-    onStationClick: (Station) -> Unit
+    onStationClick: (String) -> Unit
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
