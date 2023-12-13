@@ -95,7 +95,7 @@ class MetroViewModel @Inject constructor(
     }
 
     private fun setError(isError: Boolean) {
-        _metroUiState.update {currentState ->
+        _metroUiState.update { currentState ->
             currentState.copy(
                 isError = isError
             )

@@ -10,7 +10,7 @@ import javax.inject.Inject
 interface StationRepository {
     suspend fun getStations(city: String, line: String?): ApiResult<List<Station>>
 
-    suspend fun getStationById(id: String): Station
+    suspend fun getStationById(id: String): ApiResult<Station>
 }
 
 class NetworkStationRepository @Inject constructor(
@@ -22,5 +22,8 @@ class NetworkStationRepository @Inject constructor(
             metroApiService.getStations()
         }
 
-    override suspend fun getStationById(id: String): Station = metroApiService.getStationById(id)
+    override suspend fun getStationById(id: String): ApiResult<Station> =
+        apiSafeCaller.safeApiCall(Dispatchers.IO) {
+            metroApiService.getStationById(id)
+        }
 }

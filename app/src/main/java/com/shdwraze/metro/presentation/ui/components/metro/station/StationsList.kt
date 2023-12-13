@@ -23,7 +23,7 @@ fun StationsList(
         items(items = stations, key = { station -> station.id }) { station ->
             StationCard(
                 station = station,
-                modifier = modifier
+                modifier = Modifier
                     .padding(SmallPadding4)
                     .fillMaxWidth(),
                 transferToStationName = station.transferTo?.name,
