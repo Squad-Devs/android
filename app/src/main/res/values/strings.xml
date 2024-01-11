@@ -8,4 +8,8 @@
     <string name="lang_en">English</string>
     <string name="lang_selector_choose_language">Оберіть мову</string>
     <string name="button_next">Далі</string>
+    <string name="city_selector_what_city_are_you_from">З якого ви міста?</string>
+    <string name="city_kyiv">Київ</string>
+    <string name="city_kharkiv">Харків</string>
+    <string name="button_continue">Продовжити</string>
 </resources>
