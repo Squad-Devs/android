@@ -6,7 +6,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,7 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.shdwraze.metro.presentation.ui.screens.metro.MetroScreen
 import com.shdwraze.metro.presentation.ui.screens.station.StationScreen
-import com.shdwraze.metro.presentation.ui.screens.station.StationViewModel
+import com.shdwraze.metro.presentation.ui.screens.welcome.LanguageSelectorScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,7 +28,7 @@ fun NavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = Route.MetroScreen.route,
+        startDestination = Route.TestScreen.route,
         modifier = Modifier
             .fillMaxSize()
     ) {
@@ -64,6 +63,12 @@ fun NavGraph() {
                     }
                 )
             }
+        }
+
+        composable(
+            route = Route.TestScreen.route
+        ) {
+            LanguageSelectorScreen()
         }
     }
 
