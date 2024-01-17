@@ -4,6 +4,9 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+
+    // google maps sdk
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -53,6 +56,10 @@ android {
 }
 
 dependencies {
+    // Google Maps API
+    implementation("com.google.maps.android:maps-compose:2.11.4")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+
     // Collect with lifecycle
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
 

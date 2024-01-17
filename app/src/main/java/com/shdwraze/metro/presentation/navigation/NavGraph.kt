@@ -12,8 +12,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.shdwraze.metro.presentation.ui.screens.common.TestScreen
 import com.shdwraze.metro.presentation.ui.screens.metro.MetroScreen
 import com.shdwraze.metro.presentation.ui.screens.station.StationScreen
+import com.shdwraze.metro.presentation.ui.screens.welcome.CitySelectorScreen
 import com.shdwraze.metro.presentation.ui.screens.welcome.LanguageSelectorScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,9 +68,21 @@ fun NavGraph() {
         }
 
         composable(
-            route = Route.TestScreen.route
+            route = Route.LanguageSelectorScreen.route
         ) {
             LanguageSelectorScreen()
+        }
+
+        composable(
+            route = Route.CitySelectorScreen.route
+        ) {
+            CitySelectorScreen()
+        }
+
+        composable(
+            route = Route.TestScreen.route
+        ) {
+            TestScreen()
         }
     }
 

@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shdwraze.metro.R
 import com.shdwraze.metro.presentation.ui.components.common.CustomButton
-import com.shdwraze.metro.presentation.ui.components.welcome.language_selector.SwitchBothTwoItems
+import com.shdwraze.metro.presentation.ui.components.welcome.selector.SwitchBothTwoItems
 import com.shdwraze.metro.presentation.ui.theme.MetroTheme
 
 @Composable

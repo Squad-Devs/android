@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shdwraze.metro.R
 import com.shdwraze.metro.presentation.ui.components.common.CustomButton
-import com.shdwraze.metro.presentation.ui.components.welcome.language_selector.SwitchBothTwoItems
+import com.shdwraze.metro.presentation.ui.components.welcome.selector.SwitchBothTwoItems
 import com.shdwraze.metro.presentation.ui.theme.MetroTheme
 
 @Composable
@@ -39,7 +39,8 @@ fun CitySelectorScreen() {
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(modifier = Modifier.size(24.dp))
-        SwitchBothTwoItems(onItemClick = { selected = it },
+        SwitchBothTwoItems(
+            onItemClick = { selected = it },
             isSelected = { it == selected },
             itemDetails = listOf(
                 Pair(R.drawable.ic_kyiv, stringResource(R.string.city_kyiv)),
