@@ -10,32 +10,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.shdwraze.metro.data.model.Station
+import com.shdwraze.metro.common.Constants.DEFAULT_ZOOM
+import com.shdwraze.metro.common.Constants.KHARKIV_BOUNDS
+import com.shdwraze.metro.common.Constants.KHARKIV_FOCUS
+import com.shdwraze.metro.common.Constants.MAX_ZOOM
+import com.shdwraze.metro.common.Constants.MIN_ZOOM
 import com.shdwraze.metro.presentation.ui.theme.MetroTheme
 import com.shdwraze.metro.presentation.ui.utils.MapStyle
+
+const val POLYLINE_WIDTH = 6f
 
 @Composable
 fun MetroMap(
     metroLines: List<Pair<Color, List<LatLng>>> = listOf()
 ) {
-    val kharkiv = LatLng(49.9935, 36.2304)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
-            kharkiv,
-            13f
+            KHARKIV_FOCUS,
+            DEFAULT_ZOOM
         )
     }
-    val bounds = LatLngBounds(
-        LatLng(49.9044, 36.1672),
-        LatLng(50.0766, 36.4484)
-    )
 
     Box(modifier = Modifier.size(400.dp)) {
         GoogleMap(
@@ -43,9 +43,9 @@ fun MetroMap(
             cameraPositionState = cameraPositionState,
             properties = MapProperties(
                 mapStyleOptions = MapStyleOptions(MapStyle.json),
-                latLngBoundsForCameraTarget = bounds,
-                minZoomPreference = 11f,
-                maxZoomPreference = 15f
+                latLngBoundsForCameraTarget = KHARKIV_BOUNDS,
+                minZoomPreference = MIN_ZOOM,
+                maxZoomPreference = MAX_ZOOM
             ),
             uiSettings = MapUiSettings(
                 myLocationButtonEnabled = true
@@ -57,7 +57,7 @@ fun MetroMap(
                 Polyline(
                     points = coordinates,
                     color = color,
-                    width = 6f,
+                    width = POLYLINE_WIDTH,
                     geodesic = true
                 )
             }
