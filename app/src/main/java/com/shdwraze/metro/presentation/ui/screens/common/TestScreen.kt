@@ -22,10 +22,8 @@ fun TestScreen(
 ) {
     val metroUiState by metroViewModel.metroUiState.collectAsStateWithLifecycle()
 
-    val metroLines = MetroLineUtils.getMetroLinesWithCoordinates(metroUiState.stations)
-
     Box(modifier = Modifier.fillMaxSize()) {
-        Log.d("TEST", metroLines.toString())
-        MetroMap(metroLines)
+        Log.d("TEST", metroUiState.metropolitan.toString())
+        MetroMap(metroUiState.metropolitan)
     }
 }

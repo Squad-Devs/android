@@ -9,7 +9,7 @@ object Constants {
 
     const val SERVER_URL = "https://metro-backend.fly.dev"
 
-    const val DELAY_FOR_USE_CASE = 0L
+    const val DELAY_FOR_USE_CASE = 100L
 
     // CITY MAPS CONSTANTS
 

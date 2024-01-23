@@ -47,7 +47,7 @@ fun MetroScreen(
                 isActionsActive = isActionsActive,
                 lines = metroViewModel.lines,
                 onDropdownItemClick = { line ->
-                    metroViewModel.getStations(line)
+//                    metroViewModel.getStations(line)
                 }
             )
         }
@@ -67,7 +67,7 @@ fun MetroScreen(
 
             else -> {
                 StationsList(
-                    metroUiState.stations,
+                    listOf(),
                     modifier.padding(innerPadding),
                     onStationClick
                 )

@@ -11,8 +11,8 @@ data class Station(
     val nextStation: ShortStationInfo? = null,
     val prevStation: ShortStationInfo? = null,
     val transferTo: ShortStationInfo? = null,
-    val latitude: Float = 0f,
-    val longitude: Float = 0f,
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0,
     val exits: List<Exit> = listOf()
 )
 

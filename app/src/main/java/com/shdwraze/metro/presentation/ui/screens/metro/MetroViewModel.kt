@@ -8,24 +8,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shdwraze.metro.common.Constants.DEFAULT_CITY
 import com.shdwraze.metro.data.api.result.ApiResult
-import com.shdwraze.metro.data.model.Station
+import com.shdwraze.metro.data.model.Metropolitan
 import com.shdwraze.metro.domain.usecase.common.GetLinesUseCase
-import com.shdwraze.metro.domain.usecase.station.GetStationsUseCase
+import com.shdwraze.metro.domain.usecase.metropolitan.GetMetropolitanUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
 class MetroViewModel @Inject constructor(
-    private val getStationsUseCase: GetStationsUseCase,
+    private val getMetropolitanUseCase: GetMetropolitanUseCase,
     private val getLinesUseCase: GetLinesUseCase
 ) : ViewModel() {
 
@@ -37,14 +35,13 @@ class MetroViewModel @Inject constructor(
 
     init {
         getLines()
-        getStations()
+        getMetropolitan()
     }
 
-    fun getStations(line: String? = null) {
+    fun getMetropolitan() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                Log.d("DEBUG", "CURRENT LINE = $line")
-                getStationsUseCase(DEFAULT_CITY, line).collect {
+                getMetropolitanUseCase(DEFAULT_CITY).collect {
                     when (it) {
                         is ApiResult.Loading -> {
                             setLoading(true)
@@ -65,14 +62,14 @@ class MetroViewModel @Inject constructor(
         }
     }
 
-    private fun setStations(list: List<Station>) {
-        Log.d("DEBUG", "BEGIN UPDATE STATIONS LIST")
+    private fun setStations(metropolitan: Metropolitan) {
+        Log.d("DEBUG", "BEGIN UPDATE METROPOLITAN OBJ")
         _metroUiState.update { currentState ->
             currentState.copy(
-                stations = list
+                metropolitan = metropolitan
             )
         }
-        Log.d("DEBUG", "CURRENT STATIONS = $list")
+        Log.d("DEBUG", "CURRENT METROPOLITAN = $metropolitan")
     }
 
     private fun getLines() {

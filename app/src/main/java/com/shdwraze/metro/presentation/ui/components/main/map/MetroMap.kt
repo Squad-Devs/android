@@ -21,6 +21,7 @@ import com.shdwraze.metro.common.Constants.KHARKIV_BOUNDS
 import com.shdwraze.metro.common.Constants.KHARKIV_FOCUS
 import com.shdwraze.metro.common.Constants.MAX_ZOOM
 import com.shdwraze.metro.common.Constants.MIN_ZOOM
+import com.shdwraze.metro.data.model.Metropolitan
 import com.shdwraze.metro.presentation.ui.theme.MetroTheme
 import com.shdwraze.metro.presentation.ui.utils.MapStyle
 
@@ -28,7 +29,7 @@ const val POLYLINE_WIDTH = 6f
 
 @Composable
 fun MetroMap(
-    metroLines: List<Pair<Color, List<LatLng>>> = listOf()
+    metropolitan: Metropolitan = Metropolitan()
 ) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
@@ -51,12 +52,11 @@ fun MetroMap(
                 myLocationButtonEnabled = true
             ),
         ) {
-            metroLines.forEach { metroLine ->
-                val (color, coordinates) = metroLine
-
+            metropolitan.lines.forEach { metroLine ->
+                val coordinates = metroLine.stations.map { LatLng(it.latitude, it.longitude) }
                 Polyline(
                     points = coordinates,
-                    color = color,
+                    color = Color(metroLine.color),
                     width = POLYLINE_WIDTH,
                     geodesic = true
                 )

@@ -1,6 +1,7 @@
 package com.shdwraze.metro.data.api
 
 import com.shdwraze.metro.common.Constants.DEFAULT_CITY
+import com.shdwraze.metro.data.model.Metropolitan
 import com.shdwraze.metro.data.model.Station
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -19,4 +20,7 @@ interface MetroApiService {
 
     @GET("cities")
     suspend fun getCities(): List<String>
+
+    @GET("metropolitan")
+    suspend fun getMetropolitan(@Query("city") city: String = DEFAULT_CITY) : Metropolitan
 }
