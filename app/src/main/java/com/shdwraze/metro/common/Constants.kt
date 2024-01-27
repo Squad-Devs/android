@@ -7,9 +7,9 @@ object Constants {
 
     const val DEFAULT_CITY = "Харків"
 
-    const val SERVER_URL = "https://metro-backend.fly.dev"
+    const val SERVER_URL = "https://backend-service-jeit.onrender.com"
 
-    const val DELAY_FOR_USE_CASE = 100L
+    const val DELAY_FOR_USE_CASE = 0L
 
     // CITY MAPS CONSTANTS
 
@@ -27,4 +27,12 @@ object Constants {
     const val MIN_ZOOM = 11f
 
     const val MAX_ZOOM = 15f
+
+    // METRO LINE COLORS
+
+    const val RED_LINE_COLOR = -1424587
+
+    const val BLUE_LINE_COLOR = -16685132
+
+    const val GREEN_LINE_COLOR = -16739524
 }

@@ -57,7 +57,7 @@ android {
 
 dependencies {
     // Google Maps API
-    implementation("com.google.maps.android:maps-compose:2.11.4")
+    implementation("com.google.maps.android:maps-compose:4.3.2")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
 
     // Collect with lifecycle
