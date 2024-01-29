@@ -20,6 +20,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.shdwraze.metro.R
 import com.shdwraze.metro.common.Constants.BLUE_LINE_COLOR
 import com.shdwraze.metro.common.Constants.DEFAULT_ZOOM
+import com.shdwraze.metro.common.Constants.GREEN_LINE_COLOR
 import com.shdwraze.metro.common.Constants.KHARKIV_BOUNDS
 import com.shdwraze.metro.common.Constants.KHARKIV_FOCUS
 import com.shdwraze.metro.common.Constants.MAX_ZOOM
@@ -28,6 +29,9 @@ import com.shdwraze.metro.common.Constants.RED_LINE_COLOR
 import com.shdwraze.metro.data.model.Metropolitan
 import com.shdwraze.metro.presentation.ui.components.common.MapMarker
 import com.shdwraze.metro.presentation.ui.theme.MetroTheme
+import com.shdwraze.metro.presentation.ui.utils.IconColorPicker
+import com.shdwraze.metro.presentation.ui.utils.IconColorPicker.getMarkerIconResource
+import com.shdwraze.metro.presentation.ui.utils.IconColorPicker.getTransferIconResource
 import com.shdwraze.metro.presentation.ui.utils.MapStyle
 
 const val POLYLINE_WIDTH = 8f
@@ -66,6 +70,9 @@ fun MetroMap(
                     geodesic = true
                 )
                 metroLine.stations.forEach { station ->
+                    val metroLineColor = metroLine.color
+                    val transferToStationColor = station.transferTo?.color
+
                     MapMarker(
                         context = LocalContext.current,
                         position = LatLng(station.latitude, station.longitude),
@@ -73,11 +80,13 @@ fun MetroMap(
                         line = station.line,
                         hasTransferStation = station.transferTo != null,
                         transferToStationName = station.transferTo?.name ?: "",
-                        iconResourceId = when (metroLine.color) {
-                            RED_LINE_COLOR -> R.drawable.marker_red
-                            BLUE_LINE_COLOR -> R.drawable.marker_blue
-                            else -> R.drawable.marker_green
+                        markerIconResourceId = getMarkerIconResource(metroLineColor),
+                        transferIconResourceId = transferToStationColor?.let {
+                            getTransferIconResource(
+                                metroLineColor, it
+                            )
                         }
+                            ?: R.drawable.transfer_marker_red_blue
                     )
                 }
             }

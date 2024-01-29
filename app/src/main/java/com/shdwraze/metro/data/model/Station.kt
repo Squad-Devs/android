@@ -10,7 +10,7 @@ data class Station(
     val city: String = "",
     val nextStation: ShortStationInfo? = null,
     val prevStation: ShortStationInfo? = null,
-    val transferTo: ShortStationInfo? = null,
+    val transferTo: TransferToStationShortInfo? = null,
     val latitude: Double = 0.0,
     val longitude: Double = 0.0,
     val exits: List<Exit> = listOf()
@@ -19,7 +19,16 @@ data class Station(
 @Serializable
 data class ShortStationInfo(
     val id: String,
-    val name: String
+    val name: String,
+    val line: String
+)
+
+@Serializable
+data class TransferToStationShortInfo(
+    val id: String,
+    val name: String,
+    val line: String,
+    val color: Int
 )
 
 @Serializable

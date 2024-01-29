@@ -8,17 +8,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -43,10 +38,11 @@ fun MapMarker(
     line: String = "",
     hasTransferStation: Boolean = false,
     transferToStationName: String = "",
-    @DrawableRes iconResourceId: Int,
+    @DrawableRes markerIconResourceId: Int = R.drawable.marker_red,
+    @DrawableRes transferIconResourceId: Int = R.drawable.transfer_marker_blue_green,
 ) {
     val icon = bitmapDescriptorFromVector(
-        context, iconResourceId
+        context, markerIconResourceId
     )
     MarkerInfoWindow(
         state = rememberMarkerState(position = position),
@@ -86,7 +82,7 @@ fun MapMarker(
                     Spacer(modifier = Modifier.size(16.dp))
                     Row {
                         Icon(
-                            painter = painterResource(R.drawable.transfer_marker_blue_green),
+                            painter = painterResource(transferIconResourceId),
                             contentDescription = null,
                             tint = Color.Unspecified
                         )
