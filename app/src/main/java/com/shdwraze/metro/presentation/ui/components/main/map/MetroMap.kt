@@ -18,18 +18,15 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.shdwraze.metro.R
-import com.shdwraze.metro.common.Constants.BLUE_LINE_COLOR
 import com.shdwraze.metro.common.Constants.DEFAULT_ZOOM
-import com.shdwraze.metro.common.Constants.GREEN_LINE_COLOR
 import com.shdwraze.metro.common.Constants.KHARKIV_BOUNDS
 import com.shdwraze.metro.common.Constants.KHARKIV_FOCUS
 import com.shdwraze.metro.common.Constants.MAX_ZOOM
 import com.shdwraze.metro.common.Constants.MIN_ZOOM
-import com.shdwraze.metro.common.Constants.RED_LINE_COLOR
+import com.shdwraze.metro.data.model.ConnectionType
 import com.shdwraze.metro.data.model.Metropolitan
 import com.shdwraze.metro.presentation.ui.components.common.MapMarker
 import com.shdwraze.metro.presentation.ui.theme.MetroTheme
-import com.shdwraze.metro.presentation.ui.utils.IconColorPicker
 import com.shdwraze.metro.presentation.ui.utils.IconColorPicker.getMarkerIconResource
 import com.shdwraze.metro.presentation.ui.utils.IconColorPicker.getTransferIconResource
 import com.shdwraze.metro.presentation.ui.utils.MapStyle
@@ -70,16 +67,20 @@ fun MetroMap(
                     geodesic = true
                 )
                 metroLine.stations.forEach { station ->
+                    val connections = station.connections
                     val metroLineColor = metroLine.color
-                    val transferToStationColor = station.transferTo?.color
+                    val connectedTransferStation = connections.find {
+                        it.type == ConnectionType.TRANSFER.name
+                    }
+                    val transferToStationColor = connectedTransferStation?.toStation?.line?.color
 
                     MapMarker(
                         context = LocalContext.current,
                         position = LatLng(station.latitude, station.longitude),
                         stationName = station.name,
-                        line = station.line,
-                        hasTransferStation = station.transferTo != null,
-                        transferToStationName = station.transferTo?.name ?: "",
+                        line = station.line.name,
+                        hasTransferStation = connectedTransferStation != null,
+                        transferToStationName = connectedTransferStation?.toStation?.name ?: "",
                         markerIconResourceId = getMarkerIconResource(metroLineColor),
                         transferIconResourceId = transferToStationColor?.let {
                             getTransferIconResource(

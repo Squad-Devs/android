@@ -8,6 +8,5 @@ data class MetroUiState (
 
     val isLoading: Boolean = false,
 
-//    val stations: List<Station> = listOf()
     val metropolitan: Metropolitan = Metropolitan()
 )

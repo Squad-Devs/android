@@ -13,7 +13,7 @@ interface MetroApiService {
                             @Query("line") line: String? = null): List<Station>
 
     @GET("stations/{id}")
-    suspend fun getStationById(@Path("id") id: String): Station
+    suspend fun getStationById(@Path("id") id: Int): Station
 
     @GET("lines")
     suspend fun getLines(@Query("city") city: String = DEFAULT_CITY): List<String>
