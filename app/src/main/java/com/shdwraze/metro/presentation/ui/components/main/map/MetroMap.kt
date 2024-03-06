@@ -31,7 +31,7 @@ import com.shdwraze.metro.presentation.ui.utils.IconColorPicker.getMarkerIconRes
 import com.shdwraze.metro.presentation.ui.utils.IconColorPicker.getTransferIconResource
 import com.shdwraze.metro.presentation.ui.utils.MapStyle
 
-const val POLYLINE_WIDTH = 8f
+const val POLYLINE_WIDTH = 14f
 
 @Composable
 fun MetroMap(
@@ -45,53 +45,7 @@ fun MetroMap(
     }
 
     Box(modifier = Modifier.size(400.dp)) {
-        GoogleMap(
-            modifier = Modifier.fillMaxSize(),
-            cameraPositionState = cameraPositionState,
-            properties = MapProperties(
-                mapStyleOptions = MapStyleOptions(MapStyle.json),
-                latLngBoundsForCameraTarget = KHARKIV_BOUNDS,
-                minZoomPreference = MIN_ZOOM,
-                maxZoomPreference = MAX_ZOOM
-            ),
-            uiSettings = MapUiSettings(
-                myLocationButtonEnabled = true
-            ),
-        ) {
-            metropolitan.lines.forEach { metroLine ->
-                val coordinates = metroLine.stations.map { LatLng(it.latitude, it.longitude) }
-                Polyline(
-                    points = coordinates,
-                    color = Color(metroLine.color),
-                    width = POLYLINE_WIDTH,
-                    geodesic = true
-                )
-                metroLine.stations.forEach { station ->
-                    val connections = station.connections
-                    val metroLineColor = metroLine.color
-                    val connectedTransferStation = connections.find {
-                        it.type == ConnectionType.TRANSFER.name
-                    }
-                    val transferToStationColor = connectedTransferStation?.toStation?.line?.color
-
-                    MapMarker(
-                        context = LocalContext.current,
-                        position = LatLng(station.latitude, station.longitude),
-                        stationName = station.name,
-                        line = station.line.name,
-                        hasTransferStation = connectedTransferStation != null,
-                        transferToStationName = connectedTransferStation?.toStation?.name ?: "",
-                        markerIconResourceId = getMarkerIconResource(metroLineColor),
-                        transferIconResourceId = transferToStationColor?.let {
-                            getTransferIconResource(
-                                metroLineColor, it
-                            )
-                        }
-                            ?: R.drawable.transfer_marker_red_blue
-                    )
-                }
-            }
-        }
+        CustomGoogleMap(cameraPositionState, metropolitan)
     }
 }
 
