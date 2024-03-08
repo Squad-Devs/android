@@ -32,7 +32,8 @@ const val POLYLINE_WIDTH = 14f
 @Composable
 fun MetroMap(
     metropolitan: Metropolitan = Metropolitan(),
-    onButtonClick: (Int, Int) -> Unit = { _, _ -> },
+    onCalculateButtonClick: (Int, Int) -> Unit = { _, _ -> },
+    onResetButtonClick: () -> Unit = {},
     shortestPath: ShortestPath = ShortestPath()
 ) {
     val cameraPositionState = rememberCameraPositionState {
@@ -68,8 +69,16 @@ fun MetroMap(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
         }
-        Button(onClick = { onButtonClick(stationFromId.text.toInt(), stationToId.text.toInt()) }) {
-            Text(text = "Click")
+        Button(onClick = {
+            onCalculateButtonClick(
+                stationFromId.text.toInt(),
+                stationToId.text.toInt()
+            )
+        }) {
+            Text(text = "Calculate")
+        }
+        Button(onClick = { onResetButtonClick() }) {
+            Text(text = "Reset")
         }
     }
 }

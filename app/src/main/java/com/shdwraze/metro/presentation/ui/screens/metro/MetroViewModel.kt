@@ -65,6 +65,14 @@ class MetroViewModel @Inject constructor(
         }
     }
 
+    fun resetShortestPath() {
+        _metroUiState.update { currentState ->
+            currentState.copy(
+                shortestPath = ShortestPath()
+            )
+        }
+    }
+
     private fun getMetropolitan() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

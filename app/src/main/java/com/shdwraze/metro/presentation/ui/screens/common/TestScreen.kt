@@ -22,7 +22,8 @@ fun TestScreen(
         Log.d("TEST", metroUiState.metropolitan.toString())
         MetroMap(
             metropolitan = metroUiState.metropolitan,
-            onButtonClick = metroViewModel::getShortestPath,
+            onCalculateButtonClick = metroViewModel::getShortestPath,
+            onResetButtonClick = metroViewModel::resetShortestPath,
             shortestPath = metroUiState.shortestPath
         )
     }
