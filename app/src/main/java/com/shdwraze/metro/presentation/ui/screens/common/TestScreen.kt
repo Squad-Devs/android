@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.shdwraze.metro.data.model.ShortestPath
 import com.shdwraze.metro.presentation.ui.components.main.map.MetroMap
 import com.shdwraze.metro.presentation.ui.screens.metro.MetroViewModel
 
@@ -19,6 +20,10 @@ fun TestScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
         Log.d("TEST", metroUiState.metropolitan.toString())
-        MetroMap(metroUiState.metropolitan)
+        MetroMap(
+            metropolitan = metroUiState.metropolitan,
+            onButtonClick = metroViewModel::getShortestPath,
+            shortestPath = metroUiState.shortestPath
+        )
     }
 }

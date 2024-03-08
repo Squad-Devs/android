@@ -11,26 +11,33 @@ import com.shdwraze.metro.presentation.ui.utils.IconColorPicker.getMarkerIconRes
 import com.shdwraze.metro.presentation.ui.utils.IconColorPicker.getTransferIconResource
 
 @Composable
-fun StationMarker(station: Station, metroLineColor: Int) {
-    val connections = station.connections
-    val connectedTransferStation = connections.find {
-        it.type == ConnectionType.TRANSFER.name
-    }
-    val transferToStationColor = connectedTransferStation?.toStation?.line?.color
-
-    MapMarker(
-        context = LocalContext.current,
-        position = LatLng(station.latitude, station.longitude),
-        stationName = station.name,
-        line = station.line.name,
-        hasTransferStation = connectedTransferStation != null,
-        transferToStationName = connectedTransferStation?.toStation?.name ?: "",
-        markerIconResourceId = getMarkerIconResource(metroLineColor),
-        transferIconResourceId = transferToStationColor?.let {
-            getTransferIconResource(
-                metroLineColor, it
-            )
+fun StationMarker(
+    station: Station,
+    metroLineColor: Int,
+    isHaveShortestPath: Boolean,
+    isInShortestPath: Boolean
+) {
+    if (!isHaveShortestPath || isInShortestPath) {
+        val connections = station.connections
+        val connectedTransferStation = connections.find {
+            it.type == ConnectionType.TRANSFER.name
         }
-            ?: R.drawable.transfer_marker_red_blue
-    )
+        val transferToStationColor = connectedTransferStation?.toStation?.line?.color
+
+        MapMarker(
+            context = LocalContext.current,
+            position = LatLng(station.latitude, station.longitude),
+            stationName = station.name,
+            line = station.line.name,
+            hasTransferStation = connectedTransferStation != null,
+            transferToStationName = connectedTransferStation?.toStation?.name ?: "",
+            markerIconResourceId = getMarkerIconResource(metroLineColor),
+            transferIconResourceId = transferToStationColor?.let {
+                getTransferIconResource(
+                    metroLineColor, it
+                )
+            }
+                ?: R.drawable.transfer_marker_red_blue
+        )
+    }
 }

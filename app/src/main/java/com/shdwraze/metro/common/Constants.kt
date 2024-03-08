@@ -16,17 +16,17 @@ object Constants {
     val KHARKIV_FOCUS = LatLng(49.9935, 36.2304)
 
     val KHARKIV_BOUNDS = LatLngBounds(
-        LatLng(49.9044, 36.1672),
-        LatLng(50.0766, 36.4484)
+        LatLng(49.943821752971196, 36.184248679054896),
+        LatLng(50.05967635718973, 36.40225863088736)
     )
 
     // COMMON MAPS CONSTANTS
 
     const val DEFAULT_ZOOM = 13f
 
-    const val MIN_ZOOM = 11f
+    const val MIN_ZOOM = 12f
 
-    const val MAX_ZOOM = 15f
+    const val MAX_ZOOM = 14f
 
     // METRO LINE COLORS
 

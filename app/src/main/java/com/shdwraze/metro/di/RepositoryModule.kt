@@ -1,7 +1,7 @@
 package com.shdwraze.metro.di
 
-import com.shdwraze.metro.data.repository.CommonRepository
-import com.shdwraze.metro.data.repository.NetworkCommonRepository
+import com.shdwraze.metro.data.repository.MetroRepository
+import com.shdwraze.metro.data.repository.NetworkMetroRepository
 import com.shdwraze.metro.data.repository.NetworkStationRepository
 import com.shdwraze.metro.data.repository.StationRepository
 import dagger.Binds
@@ -24,6 +24,6 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindCommonRepository(
-        commonRepository: NetworkCommonRepository
-    ): CommonRepository
+        commonRepository: NetworkMetroRepository
+    ): MetroRepository
 }

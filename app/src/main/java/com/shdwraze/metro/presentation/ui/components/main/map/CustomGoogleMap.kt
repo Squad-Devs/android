@@ -12,12 +12,14 @@ import com.shdwraze.metro.common.Constants.KHARKIV_BOUNDS
 import com.shdwraze.metro.common.Constants.MAX_ZOOM
 import com.shdwraze.metro.common.Constants.MIN_ZOOM
 import com.shdwraze.metro.data.model.Metropolitan
+import com.shdwraze.metro.data.model.ShortestPath
 import com.shdwraze.metro.presentation.ui.utils.MapStyle
 
 @Composable
 fun CustomGoogleMap(
     cameraPositionState: CameraPositionState,
-    metropolitan: Metropolitan
+    metropolitan: Metropolitan,
+    shortestPath: ShortestPath
 ) {
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
@@ -33,7 +35,11 @@ fun CustomGoogleMap(
         ),
     ) {
         metropolitan.lines.forEach { metroLine ->
-            MetroLine(metroLine)
+            MetroLine(
+                metroLine = metroLine,
+                isHaveShortestPath = shortestPath != ShortestPath(),
+                shortestPath = shortestPath
+            )
         }
     }
 }

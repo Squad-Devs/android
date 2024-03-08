@@ -2,6 +2,7 @@ package com.shdwraze.metro.data.api
 
 import com.shdwraze.metro.common.Constants.DEFAULT_CITY
 import com.shdwraze.metro.data.model.Metropolitan
+import com.shdwraze.metro.data.model.ShortestPath
 import com.shdwraze.metro.data.model.Station
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -9,8 +10,10 @@ import retrofit2.http.Query
 
 interface MetroApiService {
     @GET("stations")
-    suspend fun getStations(@Query("city") city: String = DEFAULT_CITY,
-                            @Query("line") line: String? = null): List<Station>
+    suspend fun getStations(
+        @Query("city") city: String = DEFAULT_CITY,
+        @Query("line") line: String? = null
+    ): List<Station>
 
     @GET("stations/{id}")
     suspend fun getStationById(@Path("id") id: Int): Station
@@ -22,5 +25,8 @@ interface MetroApiService {
     suspend fun getCities(): List<String>
 
     @GET("metropolitan")
-    suspend fun getMetropolitan(@Query("city") city: String = DEFAULT_CITY) : Metropolitan
+    suspend fun getMetropolitan(@Query("city") city: String = DEFAULT_CITY): Metropolitan
+
+    @GET("stations/path")
+    suspend fun getShortestPath(@Query("from") from: Int, @Query("to") to: Int): ShortestPath
 }
