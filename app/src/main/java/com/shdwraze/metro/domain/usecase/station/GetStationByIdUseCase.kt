@@ -12,7 +12,7 @@ import javax.inject.Inject
 class GetStationByIdUseCase @Inject constructor(
     private val stationRepository: StationRepository
 ) {
-    operator fun invoke(id: String): Flow<ApiResult<Station>> = flow {
+    operator fun invoke(id: Int): Flow<ApiResult<Station>> = flow {
         emit(ApiResult.Loading)
         delay(Constants.DELAY_FOR_USE_CASE)
         emit(stationRepository.getStationById(id))
