@@ -25,12 +25,7 @@ fun MetroLine(
                 shortestPathStations.contains(station1) && shortestPathStations.contains(station2)
             val color =
                 if (isInShortestPath) Color(metroLine.color) else Color(metroLine.color).copy(alpha = 0.5f)
-            Polyline(
-                points = coordinates,
-                color = color,
-                width = POLYLINE_WIDTH,
-                geodesic = true
-            )
+            CustomPolyline(coordinates, color)
         }
         metroLine.stations.forEach { station ->
             StationMarker(
@@ -43,12 +38,7 @@ fun MetroLine(
     } else {
         val coordinates = metroLine.stations.map { LatLng(it.latitude, it.longitude) }
 
-        Polyline(
-            points = coordinates,
-            color = Color(metroLine.color),
-            width = POLYLINE_WIDTH,
-            geodesic = true
-        )
+        CustomPolyline(coordinates, Color(metroLine.color))
         metroLine.stations.forEach { station ->
             StationMarker(
                 station = station,
@@ -58,4 +48,17 @@ fun MetroLine(
             )
         }
     }
+}
+
+@Composable
+private fun CustomPolyline(
+    coordinates: List<LatLng>,
+    color: Color
+) {
+    Polyline(
+        points = coordinates,
+        color = color,
+        width = POLYLINE_WIDTH,
+        geodesic = true
+    )
 }
