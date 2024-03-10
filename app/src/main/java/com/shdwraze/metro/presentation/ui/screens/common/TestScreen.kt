@@ -24,7 +24,8 @@ fun TestScreen(
             metropolitan = metroUiState.metropolitan,
             onCalculateButtonClick = metroViewModel::getShortestPath,
             onResetButtonClick = metroViewModel::resetShortestPath,
-            shortestPath = metroUiState.shortestPath
+            shortestPath = metroUiState.shortestPath,
+            stationsMap = metroViewModel.stationsMap
         )
     }
 }

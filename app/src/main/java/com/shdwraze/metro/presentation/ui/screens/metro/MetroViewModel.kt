@@ -37,31 +37,42 @@ class MetroViewModel @Inject constructor(
 
     private var lines by mutableStateOf<List<String>>(emptyList())
 
+    private var _stationsMap = mutableStateOf<Map<String, Int>>(emptyMap())
+    val stationsMap: Map<String, Int> get() = _stationsMap.value
+
     init {
         getLines()
         getMetropolitan()
     }
 
-    fun getShortestPath(stationFromId: Int, stationToId: Int) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                getShortestPathUseCase(stationFromId, stationToId).collect {
-                    when (it) {
-                        is ApiResult.Loading -> {
-                            setLoading(true)
-                        }
-                        is ApiResult.Success -> {
-                            setShortestPath(it.value)
-                            setLoading(false)
-                        }
+    fun getShortestPath(stationFromName: String, stationToName: String) {
+        val stationFromId = stationsMap[stationFromName]
+        val stationToId = stationsMap[stationToName]
 
-                        else -> {
-                            setLoading(false)
-                            setError(true)
+        if (stationFromId != null && stationToId != null) {
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    getShortestPathUseCase(stationFromId, stationToId).collect {
+                        when (it) {
+                            is ApiResult.Loading -> {
+                                setLoading(true)
+                            }
+
+                            is ApiResult.Success -> {
+                                setShortestPath(it.value)
+                                setLoading(false)
+                            }
+
+                            else -> {
+                                setLoading(false)
+                                setError(true)
+                            }
                         }
                     }
                 }
             }
+        } else {
+            throw RuntimeException("Incorrect station values")
         }
     }
 
@@ -76,14 +87,17 @@ class MetroViewModel @Inject constructor(
     private fun getMetropolitan() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                getMetropolitanUseCase(DEFAULT_CITY).collect {
-                    when (it) {
+                getMetropolitanUseCase(DEFAULT_CITY).collect { metropolitan ->
+                    when (metropolitan) {
                         is ApiResult.Loading -> {
                             setLoading(true)
                         }
 
                         is ApiResult.Success -> {
-                            setStations(it.value)
+                            setStations(metropolitan.value)
+                            _stationsMap.value = metropolitan.value.lines
+                                .flatMap { it.stations }
+                                .associateBy({ it.name }, { it.id })
                             setLoading(false)
                         }
 
