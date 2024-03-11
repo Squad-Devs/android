@@ -1,29 +1,27 @@
 package com.shdwraze.metro.presentation.ui.components.main.map
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,21 +29,30 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import androidx.compose.ui.window.PopupProperties
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.shdwraze.metro.common.Constants.DEFAULT_ZOOM
 import com.shdwraze.metro.common.Constants.KHARKIV_FOCUS
 import com.shdwraze.metro.data.model.Metropolitan
 import com.shdwraze.metro.data.model.ShortestPath
+import com.shdwraze.metro.presentation.ui.components.common.AutoCompleteTextField
 import com.shdwraze.metro.presentation.ui.theme.MetroTheme
+import kotlinx.coroutines.delay
 
 const val POLYLINE_WIDTH = 14f
 
@@ -64,9 +71,11 @@ fun MetroMap(
         )
     }
 
-    var stationFromName by remember { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
 
-    var stationToName by remember { mutableStateOf("") }
+    var stationFromName by remember { mutableStateOf(TextFieldValue("")) }
+
+    var stationToName by remember { mutableStateOf(TextFieldValue("")) }
 
     val heightTextFields by remember { mutableStateOf(55.dp) }
 
@@ -89,13 +98,13 @@ fun MetroMap(
 
         Column(
             modifier = Modifier
-                .weight(1f)
                 .clickable(interactionSource = interactionSource,
                     indication = null,
                     onClick = {
                         stationFromExpanded = false
                         stationToExpanded = false
                     })
+                .fillMaxWidth()
         ) {
             AutoCompleteTextField(
                 value = stationFromName,
@@ -110,8 +119,10 @@ fun MetroMap(
                 expanded = stationFromExpanded,
                 onExpandedChange = { stationFromExpanded = it },
                 stationsMap = stationsMap,
-                textFieldSize = textFieldSize
+                textFieldSize = textFieldSize,
+                modifier = Modifier.fillMaxWidth()
             )
+            Spacer(modifier = Modifier.size(16.dp))
             AutoCompleteTextField(
                 value = stationToName,
                 onValueChange = { newValue ->
@@ -125,126 +136,28 @@ fun MetroMap(
                 expanded = stationToExpanded,
                 onExpandedChange = { stationToExpanded = it },
                 stationsMap = stationsMap,
-                textFieldSize = textFieldSize
+                textFieldSize = textFieldSize,
+                modifier = Modifier.fillMaxWidth()
             )
 
             Button(onClick = {
                 onCalculateButtonClick(
-                    stationFromName,
-                    stationToName
+                    stationFromName.text,
+                    stationToName.text
                 )
+                focusManager.clearFocus()
             }) {
                 Text(text = "Calculate")
             }
-            Button(onClick = { onResetButtonClick() }) {
+            Button(onClick = {
+                onResetButtonClick()
+                stationFromName = TextFieldValue("")
+                stationToName = TextFieldValue("")
+                focusManager.clearFocus()
+            }) {
                 Text(text = "Reset")
             }
         }
-    }
-}
-
-@Composable
-fun AutoCompleteTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    heightTextFields: Dp,
-    textFieldSize: Size,
-    onGloballyPositioned: (LayoutCoordinates) -> Unit,
-    expanded: Boolean,
-    onExpandedChange: (Boolean) -> Unit,
-    stationsMap: Map<String, Int>,
-    modifier: Modifier = Modifier
-) {
-    Row(modifier = Modifier.fillMaxWidth()) {
-        TextField(
-            value = value,
-            onValueChange = onValueChange,
-            modifier = modifier
-                .height(heightTextFields)
-                .onGloballyPositioned {
-                    onGloballyPositioned(it)
-                },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done
-            ),
-            singleLine = true,
-            trailingIcon = {
-                IconButton(onClick = { onExpandedChange(!expanded) }) {
-                    Icon(
-                        imageVector = Icons.Rounded.ArrowDropDown,
-                        contentDescription = "arrow"
-                    )
-                }
-            }
-        )
-    }
-
-    AnimatedVisibility(visible = expanded) {
-        AutoCompleteDropdown(
-            value = value,
-            textFieldSize = textFieldSize,
-            stationsMap = stationsMap,
-            onValueChange = onValueChange,
-            onExpandedChange = onExpandedChange
-        )
-    }
-}
-
-@Composable
-fun AutoCompleteDropdown(
-    value: String,
-    textFieldSize: Size,
-    stationsMap: Map<String, Int>,
-    onValueChange: (String) -> Unit,
-    onExpandedChange: (Boolean) -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .padding(horizontal = 5.dp)
-            .width(textFieldSize.width.dp)
-    ) {
-        LazyColumn(modifier = Modifier.heightIn(max = 150.dp)) {
-            if (value.isNotEmpty()) {
-                items(stationsMap.keys.toList()
-                    .filter {
-                        it.lowercase().contains(value.lowercase())
-                    }
-                    .sorted()
-                ) {
-                    AutoCompleteItems(title = it) { title ->
-                        onValueChange(title)
-                        onExpandedChange(false)
-                    }
-                }
-            } else {
-                items(
-                    stationsMap.keys.toList().sorted()
-                ) {
-                    AutoCompleteItems(title = it) { title ->
-                        onValueChange(title)
-                        onExpandedChange(false)
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun AutoCompleteItems(
-    title: String,
-    onSelect: (String) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                onSelect(title)
-            }
-            .padding(10.dp)
-    ) {
-        Text(text = title)
     }
 }
 
