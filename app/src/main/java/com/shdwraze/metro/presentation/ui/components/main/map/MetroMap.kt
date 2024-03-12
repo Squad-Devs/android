@@ -1,12 +1,13 @@
 package com.shdwraze.metro.presentation.ui.components.main.map
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,16 +16,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.shdwraze.metro.common.Constants.DEFAULT_ZOOM
 import com.shdwraze.metro.common.Constants.KHARKIV_FOCUS
 import com.shdwraze.metro.data.model.Metropolitan
 import com.shdwraze.metro.data.model.ShortestPath
+import com.shdwraze.metro.presentation.ui.components.common.AutoCompleteTextField
 import com.shdwraze.metro.presentation.ui.theme.MetroTheme
 
 const val POLYLINE_WIDTH = 14f
@@ -32,9 +36,14 @@ const val POLYLINE_WIDTH = 14f
 @Composable
 fun MetroMap(
     metropolitan: Metropolitan = Metropolitan(),
-    onCalculateButtonClick: (Int, Int) -> Unit = { _, _ -> },
+    onCalculateButtonClick: (String, String) -> Unit = { _, _ -> },
     onResetButtonClick: () -> Unit = {},
-    shortestPath: ShortestPath = ShortestPath()
+    shortestPath: ShortestPath = ShortestPath(),
+    stationsMap: Map<String, Int> = mapOf(),
+    startStationQueryValue: TextFieldValue = TextFieldValue(""),
+    endStationQueryValue: TextFieldValue = TextFieldValue(""),
+    onStartStationQueryValueChange: (TextFieldValue) -> Unit = {},
+    onEndStationQueryValueChange: (TextFieldValue) -> Unit = {}
 ) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
@@ -43,8 +52,17 @@ fun MetroMap(
         )
     }
 
-    var stationFromId by remember { mutableStateOf(TextFieldValue("")) }
-    var stationToId by remember { mutableStateOf(TextFieldValue("")) }
+    val focusManager = LocalFocusManager.current
+
+    val heightTextFields by remember { mutableStateOf(55.dp) }
+
+    var textFieldSize by remember { mutableStateOf(Size.Zero) }
+
+    var startStationDropdownExpanded by remember { mutableStateOf(false) }
+
+    var endStationDropdownExpanded by remember { mutableStateOf(false) }
+
+    val interactionSource = remember { MutableInteractionSource() }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(modifier = Modifier.size(400.dp)) {
@@ -55,30 +73,65 @@ fun MetroMap(
             )
         }
 
-        Row {
-            OutlinedTextField(
-                value = stationFromId,
-                onValueChange = { stationFromId = it },
-                label = { Text(text = "Enter station from ID") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        Column(
+            modifier = Modifier
+                .clickable(interactionSource = interactionSource,
+                    indication = null,
+                    onClick = {
+                        startStationDropdownExpanded = false
+                        endStationDropdownExpanded = false
+                    })
+                .fillMaxWidth()
+        ) {
+            AutoCompleteTextField(
+                value = startStationQueryValue,
+                onValueChange = { newValue ->
+                    onStartStationQueryValueChange(newValue)
+                    startStationDropdownExpanded = true
+                },
+                heightTextFields = heightTextFields,
+                onGloballyPositioned = {
+                    textFieldSize = it.size.toSize()
+                },
+                expanded = startStationDropdownExpanded,
+                onExpandedChange = { startStationDropdownExpanded = it },
+                stationsMap = stationsMap,
+                textFieldSize = textFieldSize,
+                modifier = Modifier.fillMaxWidth()
             )
-            OutlinedTextField(
-                value = stationToId,
-                onValueChange = { stationToId = it },
-                label = { Text(text = "Enter station to ID") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            Spacer(modifier = Modifier.size(16.dp))
+            AutoCompleteTextField(
+                value = endStationQueryValue,
+                onValueChange = { newValue ->
+                    onEndStationQueryValueChange(newValue)
+                    endStationDropdownExpanded = true
+                },
+                heightTextFields = heightTextFields,
+                onGloballyPositioned = {
+                    textFieldSize = it.size.toSize()
+                },
+                expanded = endStationDropdownExpanded,
+                onExpandedChange = { endStationDropdownExpanded = it },
+                stationsMap = stationsMap,
+                textFieldSize = textFieldSize,
+                modifier = Modifier.fillMaxWidth()
             )
-        }
-        Button(onClick = {
-            onCalculateButtonClick(
-                stationFromId.text.toInt(),
-                stationToId.text.toInt()
-            )
-        }) {
-            Text(text = "Calculate")
-        }
-        Button(onClick = { onResetButtonClick() }) {
-            Text(text = "Reset")
+
+            Button(onClick = {
+                onCalculateButtonClick(
+                    startStationQueryValue.text,
+                    endStationQueryValue.text
+                )
+                focusManager.clearFocus()
+            }) {
+                Text(text = "Calculate")
+            }
+            Button(onClick = {
+                onResetButtonClick()
+                focusManager.clearFocus()
+            }) {
+                Text(text = "Reset")
+            }
         }
     }
 }
