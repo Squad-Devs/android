@@ -2,9 +2,9 @@ package com.shdwraze.metro.presentation.ui.screens.metro
 
 import android.util.Log
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shdwraze.metro.common.Constants.DEFAULT_CITY
@@ -18,7 +18,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -39,6 +38,12 @@ class MetroViewModel @Inject constructor(
 
     private var _stationsMap = mutableStateOf<Map<String, Int>>(emptyMap())
     val stationsMap: Map<String, Int> get() = _stationsMap.value
+
+    private val _startStationQueryValue = MutableStateFlow(TextFieldValue(""))
+    val startStationQueryValue = _startStationQueryValue.asStateFlow()
+
+    private val _endStationQueryValue = MutableStateFlow(TextFieldValue(""))
+    val endStationQueryValue = _endStationQueryValue.asStateFlow()
 
     init {
         getLines()
@@ -76,14 +81,6 @@ class MetroViewModel @Inject constructor(
         }
     }
 
-    fun resetShortestPath() {
-        _metroUiState.update { currentState ->
-            currentState.copy(
-                shortestPath = ShortestPath()
-            )
-        }
-    }
-
     private fun getMetropolitan() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -109,6 +106,22 @@ class MetroViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun resetShortestPath() {
+        _metroUiState.update { currentState ->
+            currentState.copy(
+                shortestPath = ShortestPath()
+            )
+        }
+    }
+
+    fun updateStartStationQueryValue(value: TextFieldValue) {
+        _startStationQueryValue.value = value
+    }
+
+    fun updateEndStationQueryValue(value: TextFieldValue) {
+        _endStationQueryValue.value = value
     }
 
     private fun setShortestPath(shortestPath: ShortestPath) {

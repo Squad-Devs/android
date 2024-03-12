@@ -39,7 +39,11 @@ fun MetroMap(
     onCalculateButtonClick: (String, String) -> Unit = { _, _ -> },
     onResetButtonClick: () -> Unit = {},
     shortestPath: ShortestPath = ShortestPath(),
-    stationsMap: Map<String, Int> = mapOf()
+    stationsMap: Map<String, Int> = mapOf(),
+    startStationQueryValue: TextFieldValue = TextFieldValue(""),
+    endStationQueryValue: TextFieldValue = TextFieldValue(""),
+    onStartStationQueryValueChange: (TextFieldValue) -> Unit = {},
+    onEndStationQueryValueChange: (TextFieldValue) -> Unit = {}
 ) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
@@ -50,17 +54,13 @@ fun MetroMap(
 
     val focusManager = LocalFocusManager.current
 
-    var stationFromName by remember { mutableStateOf(TextFieldValue("")) }
-
-    var stationToName by remember { mutableStateOf(TextFieldValue("")) }
-
     val heightTextFields by remember { mutableStateOf(55.dp) }
 
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
 
-    var stationFromExpanded by remember { mutableStateOf(false) }
+    var startStationDropdownExpanded by remember { mutableStateOf(false) }
 
-    var stationToExpanded by remember { mutableStateOf(false) }
+    var endStationDropdownExpanded by remember { mutableStateOf(false) }
 
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -78,40 +78,40 @@ fun MetroMap(
                 .clickable(interactionSource = interactionSource,
                     indication = null,
                     onClick = {
-                        stationFromExpanded = false
-                        stationToExpanded = false
+                        startStationDropdownExpanded = false
+                        endStationDropdownExpanded = false
                     })
                 .fillMaxWidth()
         ) {
             AutoCompleteTextField(
-                value = stationFromName,
+                value = startStationQueryValue,
                 onValueChange = { newValue ->
-                    stationFromName = newValue
-                    stationFromExpanded = true
+                    onStartStationQueryValueChange(newValue)
+                    startStationDropdownExpanded = true
                 },
                 heightTextFields = heightTextFields,
                 onGloballyPositioned = {
                     textFieldSize = it.size.toSize()
                 },
-                expanded = stationFromExpanded,
-                onExpandedChange = { stationFromExpanded = it },
+                expanded = startStationDropdownExpanded,
+                onExpandedChange = { startStationDropdownExpanded = it },
                 stationsMap = stationsMap,
                 textFieldSize = textFieldSize,
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.size(16.dp))
             AutoCompleteTextField(
-                value = stationToName,
+                value = endStationQueryValue,
                 onValueChange = { newValue ->
-                    stationToName = newValue
-                    stationToExpanded = true
+                    onEndStationQueryValueChange(newValue)
+                    endStationDropdownExpanded = true
                 },
                 heightTextFields = heightTextFields,
                 onGloballyPositioned = {
                     textFieldSize = it.size.toSize()
                 },
-                expanded = stationToExpanded,
-                onExpandedChange = { stationToExpanded = it },
+                expanded = endStationDropdownExpanded,
+                onExpandedChange = { endStationDropdownExpanded = it },
                 stationsMap = stationsMap,
                 textFieldSize = textFieldSize,
                 modifier = Modifier.fillMaxWidth()
@@ -119,8 +119,8 @@ fun MetroMap(
 
             Button(onClick = {
                 onCalculateButtonClick(
-                    stationFromName.text,
-                    stationToName.text
+                    startStationQueryValue.text,
+                    endStationQueryValue.text
                 )
                 focusManager.clearFocus()
             }) {
@@ -128,8 +128,6 @@ fun MetroMap(
             }
             Button(onClick = {
                 onResetButtonClick()
-                stationFromName = TextFieldValue("")
-                stationToName = TextFieldValue("")
                 focusManager.clearFocus()
             }) {
                 Text(text = "Reset")

@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.shdwraze.metro.data.model.ShortestPath
 import com.shdwraze.metro.presentation.ui.components.main.map.MetroMap
 import com.shdwraze.metro.presentation.ui.screens.metro.MetroViewModel
 
@@ -17,15 +17,25 @@ fun TestScreen(
     metroViewModel: MetroViewModel = hiltViewModel()
 ) {
     val metroUiState by metroViewModel.metroUiState.collectAsStateWithLifecycle()
+    val startStationQueryValue by metroViewModel.startStationQueryValue.collectAsStateWithLifecycle()
+    val endStationQueryValue by metroViewModel.endStationQueryValue.collectAsStateWithLifecycle()
 
     Box(modifier = Modifier.fillMaxSize()) {
         Log.d("TEST", metroUiState.metropolitan.toString())
         MetroMap(
             metropolitan = metroUiState.metropolitan,
             onCalculateButtonClick = metroViewModel::getShortestPath,
-            onResetButtonClick = metroViewModel::resetShortestPath,
+            onResetButtonClick = {
+                metroViewModel.resetShortestPath()
+                metroViewModel.updateStartStationQueryValue(TextFieldValue(""))
+                metroViewModel.updateEndStationQueryValue(TextFieldValue(""))
+            },
             shortestPath = metroUiState.shortestPath,
-            stationsMap = metroViewModel.stationsMap
+            stationsMap = metroViewModel.stationsMap,
+            startStationQueryValue = startStationQueryValue,
+            endStationQueryValue = endStationQueryValue,
+            onStartStationQueryValueChange = metroViewModel::updateStartStationQueryValue,
+            onEndStationQueryValueChange = metroViewModel::updateEndStationQueryValue
         )
     }
 }
