@@ -1,6 +1,5 @@
 package com.shdwraze.metro.presentation.ui.components.main.bottomsheetcontent
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -21,6 +20,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -39,7 +40,7 @@ fun BottomSheetContent(
     endStationQueryValue: TextFieldValue = TextFieldValue(""),
     onStartStationQueryValueChange: (TextFieldValue) -> Unit = {},
     onEndStationQueryValueChange: (TextFieldValue) -> Unit = {},
-    modifier: Modifier = Modifier
+    onActionStart: () -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -55,12 +56,14 @@ fun BottomSheetContent(
 
     Column(
         modifier = Modifier
-            .clickable(interactionSource = interactionSource,
+            .clickable(
+                interactionSource = interactionSource,
                 indication = null,
                 onClick = {
                     startStationDropdownExpanded = false
                     endStationDropdownExpanded = false
-                })
+                }
+            )
             .height(640.dp)
             .padding(start = 24.dp, end = 24.dp)
             .fillMaxWidth()
@@ -84,7 +87,13 @@ fun BottomSheetContent(
             onExpandedChange = { startStationDropdownExpanded = it },
             stationsMap = stationsMap,
             textFieldSize = textFieldSize,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusEvent { focusState ->
+                    if (focusState.isFocused) {
+                        onActionStart()
+                    }
+                },
             label = stringResource(id = R.string.textfield_text_where_question),
             leadingIcon = Icons.Default.LocationOn
         )

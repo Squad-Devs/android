@@ -17,8 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.shdwraze.metro.common.utils.Colors
 
 @Composable
@@ -42,9 +44,13 @@ fun CustomTextField(
         keyboardActions = keyboardActions,
         singleLine = singleLine,
         trailingIcon = trailingIcon,
-        textStyle = textStyle,
+        textStyle = textStyle.copy(
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp
+        ),
         colors = OutlinedTextFieldDefaults.colors(
             focusedTextColor = Color.Black,
+            unfocusedTextColor = Color.Black,
             focusedBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent,
             focusedContainerColor = Colors.CUSTOM_GRAY,
