@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.DropdownMenu
@@ -23,9 +24,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -33,6 +36,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.PopupProperties
+import com.shdwraze.metro.R
 import kotlinx.coroutines.delay
 
 @Composable
@@ -46,13 +50,15 @@ fun AutoCompleteTextField(
     onExpandedChange: (Boolean) -> Unit,
     stationsMap: Map<String, Int>,
     modifier: Modifier = Modifier,
-    delayMillis: Long = 500
+    delayMillis: Long = 500,
+    label: String = stringResource(R.string.textfield_text_where_question),
+    leadingIcon: ImageVector = Icons.Default.LocationOn
 ) {
     val icon = if (expanded) Icons.Rounded.Close else Icons.Rounded.ArrowDropDown
     var showSuggestions by remember { mutableStateOf(false) }
 
     Box(modifier = modifier) {
-        OutlinedTextField(
+        CustomTextField(
             value = value,
             onValueChange = {
                 onValueChange(it)
@@ -72,7 +78,9 @@ fun AutoCompleteTextField(
                     Icon(imageVector = icon, contentDescription = "arrow")
                 }
             },
-            textStyle = TextStyle(color = Color.Black)
+            textStyle = TextStyle(color = Color.Black),
+            label = label,
+            leadingIcon = leadingIcon
         )
 
         DropdownMenu(
