@@ -1,9 +1,11 @@
 package com.shdwraze.metro.presentation.ui.components.common
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
@@ -13,7 +15,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -35,6 +38,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.shdwraze.metro.R
 import kotlinx.coroutines.delay
@@ -83,35 +87,44 @@ fun AutoCompleteTextField(
             leadingIcon = leadingIcon
         )
 
-        DropdownMenu(
-            expanded = expanded && showSuggestions && value.text.isNotEmpty(),
-            onDismissRequest = { onExpandedChange(false) },
-            modifier = Modifier.width(with(LocalDensity.current) { textFieldSize.width.toDp() }),
-            properties = PopupProperties(
-                focusable = false,
-                dismissOnBackPress = true,
-                dismissOnClickOutside = true
-            )
+        MaterialTheme(
+            shapes = MaterialTheme.shapes.copy(extraSmall = RoundedCornerShape(16.dp))
         ) {
-            val suggestions = stationsMap.keys.toList()
-                .filter { it.lowercase().contains(value.text.lowercase()) }
-                .sorted()
+            DropdownMenu(
+                expanded = expanded && showSuggestions && value.text.isNotEmpty(),
+                onDismissRequest = { onExpandedChange(false) },
+                modifier = Modifier
+                    .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
+                    .shadow(elevation = 8.dp)
+                    .background(color = MaterialTheme.colorScheme.onPrimary),
+                properties = PopupProperties(
+                    focusable = false,
+                    dismissOnBackPress = true,
+                    dismissOnClickOutside = true
+                ),
 
-            suggestions.forEach { suggestion ->
-                DropdownMenuItem(
-                    onClick = {
-                        onValueChange(
-                            TextFieldValue(
-                                text = suggestion,
-                                selection = TextRange(suggestion.length)
+                ) {
+                val suggestions = stationsMap.keys.toList()
+                    .filter { it.lowercase().contains(value.text.lowercase()) }
+                    .sorted()
+
+                suggestions.forEach { suggestion ->
+                    DropdownMenuItem(
+                        onClick = {
+                            onValueChange(
+                                TextFieldValue(
+                                    text = suggestion,
+                                    selection = TextRange(suggestion.length)
+                                )
                             )
-                        )
-                        onExpandedChange(false)
-                    },
-                    text = { Text(text = suggestion) }
-                )
+                            onExpandedChange(false)
+                        },
+                        text = { Text(text = suggestion) }
+                    )
+                }
             }
         }
+
     }
 
     LaunchedEffect(value) {

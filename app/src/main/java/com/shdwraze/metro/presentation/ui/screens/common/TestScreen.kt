@@ -70,7 +70,6 @@ fun TestScreen(
             Log.d("TEST", metroUiState.metropolitan.toString())
             MetroMap(
                 metropolitan = metroUiState.metropolitan,
-
                 shortestPath = metroUiState.shortestPath,
             )
         }
