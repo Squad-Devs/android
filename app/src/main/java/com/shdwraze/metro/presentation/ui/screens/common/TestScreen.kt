@@ -13,6 +13,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -49,6 +50,7 @@ import com.shdwraze.metro.presentation.ui.components.main.bottomsheetcontent.Bot
 import com.shdwraze.metro.presentation.ui.components.main.map.MetroMap
 import com.shdwraze.metro.presentation.ui.screens.metro.MetroViewModel
 import com.shdwraze.metro.presentation.ui.utils.extensions.noRippleClickable
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -155,17 +157,38 @@ fun SidebarMenu(
     visible: Boolean
 ) {
     val visibleState = remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(visible) {
         visibleState.value = visible
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.Black.copy(alpha = 0.5f))
-            .noRippleClickable { onCloseClick() }
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        AnimatedVisibility(
+            visible = visibleState.value,
+            enter = fadeIn(
+                initialAlpha = 0f
+            ),
+            exit = fadeOut(
+                animationSpec = tween(durationMillis = 100),
+                targetAlpha = 1f
+            )
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        color = Color.Black.copy(alpha = 0.5f)
+                    )
+                    .noRippleClickable {
+                        visibleState.value = false
+                        scope.launch {
+                            delay(120)
+                        }
+                        onCloseClick()
+                    }
+            )
+        }
         AnimatedVisibility(
             visible = visibleState.value,
             enter = slideInHorizontally(
@@ -173,15 +196,14 @@ fun SidebarMenu(
                 initialOffsetX = { fullWidth -> -fullWidth / 3 }
             ) + fadeIn(animationSpec = tween(durationMillis = 100)),
             exit = slideOutHorizontally(
-                animationSpec = spring(stiffness = Spring.StiffnessHigh),
-                targetOffsetX = { 100 }
-            ) + fadeOut()
+                animationSpec = spring(stiffness = Spring.StiffnessMedium),
+                targetOffsetX = { fullWidth -> -fullWidth }
+            ) + fadeOut(animationSpec = tween(durationMillis = 100))
         ) {
-            Log.d("TEST", "I'm here")
             Box(
                 modifier = Modifier
-                    .fillMaxHeight()
                     .width(300.dp)
+                    .fillMaxHeight()
                     .background(color = MaterialTheme.colorScheme.onPrimary)
                     .noRippleClickable { }
                     .padding(16.dp)
