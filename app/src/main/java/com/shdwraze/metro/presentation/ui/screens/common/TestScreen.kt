@@ -1,42 +1,37 @@
 package com.shdwraze.metro.presentation.ui.screens.common
 
 import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -49,8 +44,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shdwraze.metro.presentation.ui.components.main.bottomsheetcontent.BottomSheetContent
 import com.shdwraze.metro.presentation.ui.components.main.map.MetroMap
 import com.shdwraze.metro.presentation.ui.screens.metro.MetroViewModel
-import com.shdwraze.metro.presentation.ui.utils.extensions.noRippleClickable
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,152 +56,129 @@ fun TestScreen(
     val endStationQueryValue by metroViewModel.endStationQueryValue.collectAsStateWithLifecycle()
 
     val sheetState = rememberStandardBottomSheetState(
-        initialValue = SheetValue.PartiallyExpanded
+        initialValue = SheetValue.PartiallyExpanded,
+        skipHiddenState = false
     )
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = sheetState
     )
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    var isMenuOpened by remember { mutableStateOf(false) }
-
-    BottomSheetScaffold(
-        sheetContent = {
-            BottomSheetContent(
-                onCalculateButtonClick = { startStation, endStation ->
-                    metroViewModel.getShortestPath(startStation, endStation)
-                    scope.launch { sheetState.partialExpand() }
-                },
-                onResetButtonClick = {
-                    metroViewModel.resetShortestPath()
-                    metroViewModel.updateStartStationQueryValue(TextFieldValue(""))
-                    metroViewModel.updateEndStationQueryValue(TextFieldValue(""))
-                },
-                stationsMap = metroViewModel.stationsMap,
-                startStationQueryValue = startStationQueryValue,
-                endStationQueryValue = endStationQueryValue,
-                onStartStationQueryValueChange = metroViewModel::updateStartStationQueryValue,
-                onEndStationQueryValueChange = metroViewModel::updateEndStationQueryValue,
-                onActionStart = {
-                    scope.launch { sheetState.expand() }
-                }
-            )
-        },
-        sheetPeekHeight = 154.dp,
-        sheetShadowElevation = 16.dp,
-        sheetContainerColor = MaterialTheme.colorScheme.onPrimary,
-        scaffoldState = scaffoldState,
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = "Metro App Name",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.onPrimary,
-                    titleContentColor = Color.Black
-                ),
-                modifier = Modifier
-                    .shadow(elevation = 8.dp),
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            isMenuOpened = true
-                        },
-                        modifier = Modifier
-                            .padding(start = 16.dp)
-                            .size(24.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "menu",
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-                }
-            )
-        }
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Log.d("TEST", metroUiState.metropolitan.toString())
-            MetroMap(
-                metropolitan = metroUiState.metropolitan,
-                shortestPath = metroUiState.shortestPath,
-            )
-        }
-    }
-
-    if (isMenuOpened) {
-        SidebarMenu(
-            onCloseClick = {
-                isMenuOpened = false
-            },
-            visible = isMenuOpened
-        )
-    }
-}
-
-@Composable
-fun SidebarMenu(
-    onCloseClick: () -> Unit = {},
-    visible: Boolean
-) {
-    val visibleState = remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
-
-    LaunchedEffect(visible) {
-        visibleState.value = visible
-    }
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        AnimatedVisibility(
-            visible = visibleState.value,
-            enter = fadeIn(
-                initialAlpha = 0f
-            ),
-            exit = fadeOut(
-                animationSpec = tween(durationMillis = 100),
-                targetAlpha = 1f
-            )
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        color = Color.Black.copy(alpha = 0.5f)
-                    )
-                    .noRippleClickable {
-                        visibleState.value = false
-                        scope.launch {
-                            delay(120)
-                        }
-                        onCloseClick()
-                    }
-            )
-        }
-        AnimatedVisibility(
-            visible = visibleState.value,
-            enter = slideInHorizontally(
-                animationSpec = tween(durationMillis = 100),
-                initialOffsetX = { fullWidth -> -fullWidth / 3 }
-            ) + fadeIn(animationSpec = tween(durationMillis = 100)),
-            exit = slideOutHorizontally(
-                animationSpec = spring(stiffness = Spring.StiffnessMedium),
-                targetOffsetX = { fullWidth -> -fullWidth }
-            ) + fadeOut(animationSpec = tween(durationMillis = 100))
-        ) {
-            Box(
-                modifier = Modifier
-                    .width(300.dp)
-                    .fillMaxHeight()
-                    .background(color = MaterialTheme.colorScheme.onPrimary)
-                    .noRippleClickable { }
-                    .padding(16.dp)
+    ModalNavigationDrawer(
+        drawerContent = {
+            ModalDrawerSheet(
+                modifier = Modifier.width(300.dp),
+                drawerContainerColor = MaterialTheme.colorScheme.onPrimary
             ) {
-                Text(text = "Coming soon")
+                Text(
+                    text = "Coming soon...",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 24.dp, top = 24.dp)
+                )
+                Spacer(modifier = Modifier.height(36.dp))
+                NavigationDrawerItem(
+                    label = {
+                        Text(text = "Item example")
+                    },
+                    selected = true,
+                    onClick = { /*TODO*/ },
+                    icon = {
+                        Icon(imageVector = Icons.Default.Create, contentDescription = "example")
+                    },
+                    colors = NavigationDrawerItemDefaults.colors(
+                        selectedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                        unselectedContainerColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                )
+                NavigationDrawerItem(
+                    label = {
+                        Text(text = "Item example")
+                    },
+                    selected = false,
+                    onClick = { /*TODO*/ },
+                    icon = {
+                        Icon(imageVector = Icons.Default.Settings, contentDescription = "example")
+                    },
+                    colors = NavigationDrawerItemDefaults.colors(
+                        selectedContainerColor = MaterialTheme.colorScheme.background,
+                        unselectedContainerColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                )
+
+            }
+        },
+        drawerState = drawerState
+    ) {
+        BottomSheetScaffold(
+            sheetContent = {
+                BottomSheetContent(
+                    onCalculateButtonClick = { startStation, endStation ->
+                        metroViewModel.getShortestPath(startStation, endStation)
+                        scope.launch { sheetState.partialExpand() }
+                    },
+                    onResetButtonClick = {
+                        metroViewModel.resetShortestPath()
+                        metroViewModel.updateStartStationQueryValue(TextFieldValue(""))
+                        metroViewModel.updateEndStationQueryValue(TextFieldValue(""))
+                    },
+                    stationsMap = metroViewModel.stationsMap,
+                    startStationQueryValue = startStationQueryValue,
+                    endStationQueryValue = endStationQueryValue,
+                    onStartStationQueryValueChange = metroViewModel::updateStartStationQueryValue,
+                    onEndStationQueryValueChange = metroViewModel::updateEndStationQueryValue,
+                    onActionStart = {
+                        scope.launch { sheetState.expand() }
+                    }
+                )
+            },
+            sheetPeekHeight = 154.dp,
+            sheetShadowElevation = 16.dp,
+            sheetContainerColor = MaterialTheme.colorScheme.onPrimary,
+            scaffoldState = scaffoldState,
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text(
+                            text = "Metro App Name",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.onPrimary,
+                        titleContentColor = Color.Black
+                    ),
+                    modifier = Modifier
+                        .shadow(elevation = 8.dp),
+                    navigationIcon = {
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    drawerState.open()
+                                }
+                            },
+                            modifier = Modifier
+                                .padding(start = 16.dp)
+                                .size(24.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = "menu",
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                    }
+                )
+            }
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Log.d("TEST", metroUiState.metropolitan.toString())
+                MetroMap(
+                    metropolitan = metroUiState.metropolitan,
+                    shortestPath = metroUiState.shortestPath,
+                )
             }
         }
     }

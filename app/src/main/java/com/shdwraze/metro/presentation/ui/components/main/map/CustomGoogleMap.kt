@@ -31,7 +31,9 @@ fun CustomGoogleMap(
             maxZoomPreference = MAX_ZOOM
         ),
         uiSettings = MapUiSettings(
-            myLocationButtonEnabled = true
+            myLocationButtonEnabled = false,
+            zoomControlsEnabled = false,
+            mapToolbarEnabled = false
         ),
     ) {
         metropolitan.lines.forEach { metroLine ->
