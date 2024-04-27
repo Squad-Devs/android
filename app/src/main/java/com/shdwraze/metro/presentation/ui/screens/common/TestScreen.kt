@@ -5,8 +5,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +13,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -51,9 +48,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.shdwraze.metro.R
-import com.shdwraze.metro.common.Constants
-import com.shdwraze.metro.common.utils.Colors
 import com.shdwraze.metro.data.model.ShortestPath
 import com.shdwraze.metro.presentation.ui.components.common.CustomTopAppBar
 import com.shdwraze.metro.presentation.ui.components.main.bottomsheetcontent.BottomSheetContent
@@ -63,7 +57,6 @@ import com.shdwraze.metro.presentation.ui.screens.metro.MetroViewModel
 import com.shdwraze.metro.presentation.ui.theme.MetroTheme
 import com.shdwraze.metro.presentation.ui.utils.IconColorPicker.getMarkerIconResource
 import kotlinx.coroutines.launch
-import kotlin.math.max
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,9 +79,14 @@ fun TestScreen(
 
     ModalNavigationDrawer(
         drawerContent = {
-            SidebarMenu()
+            SidebarMenu(onCloseButtonClick = {
+                scope.launch {
+                    drawerState.close()
+                }
+            })
         },
-        drawerState = drawerState
+        drawerState = drawerState,
+        gesturesEnabled = false
     ) {
         BottomSheetScaffold(
             sheetContent = {
