@@ -67,11 +67,6 @@ fun MainScreen(
                             sheetState.hide()
                         }
                     },
-                    onResetButtonClick = {
-                        metroViewModel.resetShortestPath()
-                        metroViewModel.updateStartStationQueryValue(TextFieldValue(""))
-                        metroViewModel.updateEndStationQueryValue(TextFieldValue(""))
-                    },
                     stationsMap = metroViewModel.stationsMap,
                     startStationQueryValue = startStationQueryValue,
                     endStationQueryValue = endStationQueryValue,

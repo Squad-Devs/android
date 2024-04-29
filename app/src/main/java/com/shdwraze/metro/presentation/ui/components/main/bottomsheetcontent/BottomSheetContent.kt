@@ -20,7 +20,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalFocusManager
@@ -34,7 +33,6 @@ import com.shdwraze.metro.presentation.ui.components.common.AutoCompleteTextFiel
 @Composable
 fun BottomSheetContent(
     onCalculateButtonClick: (String, String) -> Unit = { _, _ -> },
-    onResetButtonClick: () -> Unit = {},
     stationsMap: Map<String, Int> = mapOf(),
     startStationQueryValue: TextFieldValue = TextFieldValue(""),
     endStationQueryValue: TextFieldValue = TextFieldValue(""),
@@ -128,15 +126,6 @@ fun BottomSheetContent(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = stringResource(R.string.btn_text_search))
-        }
-        Button(
-            onClick = {
-                onResetButtonClick()
-                focusManager.clearFocus()
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Reset")
         }
     }
 }

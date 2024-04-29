@@ -78,7 +78,9 @@ fun AutoCompleteTextField(
             ),
             singleLine = true,
             trailingIcon = {
-                IconButton(onClick = { onExpandedChange(!expanded) }) {
+                IconButton(onClick = {
+                    onExpandedChange(!expanded)
+                }) {
                     Icon(imageVector = icon, contentDescription = "arrow")
                 }
             },
@@ -101,9 +103,8 @@ fun AutoCompleteTextField(
                     focusable = false,
                     dismissOnBackPress = true,
                     dismissOnClickOutside = true
-                ),
-
-                ) {
+                )
+            ) {
                 val suggestions = stationsMap.keys.toList()
                     .filter { it.lowercase().contains(value.text.lowercase()) }
                     .sorted()
