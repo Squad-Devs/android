@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -74,9 +75,10 @@ fun RouteInfo(
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 LazyRow {
-                    items(shortestPath.path) { station ->
+                    itemsIndexed(shortestPath.path) { index, station ->
                         val stationLineColor = Color(station.line.color)
-                        val stationMarker = IconColorPicker.getMarkerIconResource(station.line.color)
+                        val stationMarker =
+                            IconColorPicker.getMarkerIconResource(station.line.color)
 
                         Column(
                             modifier = Modifier
@@ -118,24 +120,29 @@ fun RouteInfo(
                                 fontWeight = FontWeight.Medium
                             )
                         }
-                        Box(
-                            modifier = Modifier
-                                .width(24.dp)
-                                .height(20.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Canvas(modifier = Modifier.fillMaxWidth()) {
-                                val dashWidth = 10f
-                                val dashGap = 10f
-                                val dashPathEffect =
-                                    PathEffect.dashPathEffect(floatArrayOf(dashWidth, dashGap), 0f)
-                                drawLine(
-                                    color = stationLineColor,
-                                    start = Offset.Zero,
-                                    end = Offset(size.width, 0f),
-                                    strokeWidth = 15f,
-                                    pathEffect = dashPathEffect
-                                )
+                        if (index != shortestPath.path.size - 1) {
+                            Box(
+                                modifier = Modifier
+                                    .width(24.dp)
+                                    .height(20.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Canvas(modifier = Modifier.fillMaxWidth()) {
+                                    val dashWidth = 10f
+                                    val dashGap = 10f
+                                    val dashPathEffect =
+                                        PathEffect.dashPathEffect(
+                                            floatArrayOf(dashWidth, dashGap),
+                                            0f
+                                        )
+                                    drawLine(
+                                        color = stationLineColor,
+                                        start = Offset.Zero,
+                                        end = Offset(size.width, 0f),
+                                        strokeWidth = 15f,
+                                        pathEffect = dashPathEffect
+                                    )
+                                }
                             }
                         }
                     }
