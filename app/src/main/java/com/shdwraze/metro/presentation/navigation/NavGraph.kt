@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.shdwraze.metro.presentation.ui.screens.common.TestScreen
+import com.shdwraze.metro.presentation.ui.screens.common.MainScreen
 import com.shdwraze.metro.presentation.ui.screens.welcome.CitySelectorScreen
 import com.shdwraze.metro.presentation.ui.screens.welcome.LanguageSelectorScreen
 
@@ -16,7 +16,7 @@ fun NavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = Route.TestScreen.route,
+        startDestination = Route.MainScreen.route,
         modifier = Modifier
             .fillMaxSize()
     ) {
@@ -33,9 +33,9 @@ fun NavGraph() {
         }
 
         composable(
-            route = Route.TestScreen.route
+            route = Route.MainScreen.route
         ) {
-            TestScreen()
+            MainScreen()
         }
     }
 }

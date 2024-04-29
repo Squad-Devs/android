@@ -1,6 +1,7 @@
 package com.shdwraze.metro.presentation.ui.theme
 
 import android.app.Activity
+import android.graphics.Color
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -82,7 +83,7 @@ private val DarkColors = darkColorScheme(
 
 @Composable
 fun MetroTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
@@ -100,8 +101,13 @@ fun MetroTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            window.statusBarColor = colorScheme.onPrimary.toArgb()
+            window.navigationBarColor = colorScheme.onPrimary.toArgb()
+
+            WindowCompat.getInsetsController(window, view).let { controller ->
+                controller.isAppearanceLightStatusBars = true
+                controller.isAppearanceLightNavigationBars = true
+            }
         }
     }
 

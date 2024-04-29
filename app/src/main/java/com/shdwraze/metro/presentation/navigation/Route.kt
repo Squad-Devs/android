@@ -14,7 +14,7 @@ sealed class Route(
 
     object LanguageSelectorScreen : Route(route = "languageSelectorScreen")
     object CitySelectorScreen : Route(route = "citySelectorScreen")
-    object TestScreen : Route(route = "testScreen")
+    object MainScreen : Route(route = "mainScreen")
 
     fun getRouteByName(name: String): Route? {
         return when (name) {
@@ -23,7 +23,7 @@ sealed class Route(
             "appStartNavigation" -> AppStartNavigation
             "languageSelectorScreen" -> LanguageSelectorScreen
             "citySelectorScreen" -> CitySelectorScreen
-            "testScreen" -> TestScreen
+            "mainScreen" -> MainScreen
             else -> null
         }
     }

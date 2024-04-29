@@ -2,9 +2,9 @@ package com.shdwraze.metro.presentation.ui.screens.metro
 
 import android.util.Log
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shdwraze.metro.common.Constants.DEFAULT_CITY
@@ -18,7 +18,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -37,21 +36,65 @@ class MetroViewModel @Inject constructor(
 
     private var lines by mutableStateOf<List<String>>(emptyList())
 
+    private var _stationsMap = mutableStateOf<Map<String, Int>>(emptyMap())
+    val stationsMap: Map<String, Int> get() = _stationsMap.value
+
+    private val _startStationQueryValue = MutableStateFlow(TextFieldValue(""))
+    val startStationQueryValue = _startStationQueryValue.asStateFlow()
+
+    private val _endStationQueryValue = MutableStateFlow(TextFieldValue(""))
+    val endStationQueryValue = _endStationQueryValue.asStateFlow()
+
     init {
         getLines()
         getMetropolitan()
     }
 
-    fun getShortestPath(stationFromId: Int, stationToId: Int) {
+    fun getShortestPath(stationFromName: String, stationToName: String) {
+        val stationFromId = stationsMap[stationFromName]
+        val stationToId = stationsMap[stationToName]
+
+        if (stationFromId != null && stationToId != null) {
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    getShortestPathUseCase(stationFromId, stationToId).collect {
+                        when (it) {
+                            is ApiResult.Loading -> {
+                                setLoading(true)
+                            }
+
+                            is ApiResult.Success -> {
+                                setShortestPath(it.value)
+                                setLoading(false)
+                            }
+
+                            else -> {
+                                setLoading(false)
+                                setError(true)
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            throw RuntimeException("Incorrect station values")
+        }
+    }
+
+    private fun getMetropolitan() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                getShortestPathUseCase(stationFromId, stationToId).collect {
-                    when (it) {
+                getMetropolitanUseCase(DEFAULT_CITY).collect { metropolitan ->
+                    when (metropolitan) {
                         is ApiResult.Loading -> {
                             setLoading(true)
                         }
+
                         is ApiResult.Success -> {
-                            setShortestPath(it.value)
+                            setStations(metropolitan.value)
+                            _stationsMap.value = metropolitan.value.lines
+                                .flatMap { it.stations }
+                                .associateBy({ it.name }, { it.id })
                             setLoading(false)
                         }
 
@@ -73,28 +116,12 @@ class MetroViewModel @Inject constructor(
         }
     }
 
-    private fun getMetropolitan() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                getMetropolitanUseCase(DEFAULT_CITY).collect {
-                    when (it) {
-                        is ApiResult.Loading -> {
-                            setLoading(true)
-                        }
+    fun updateStartStationQueryValue(value: TextFieldValue) {
+        _startStationQueryValue.value = value
+    }
 
-                        is ApiResult.Success -> {
-                            setStations(it.value)
-                            setLoading(false)
-                        }
-
-                        else -> {
-                            setLoading(false)
-                            setError(true)
-                        }
-                    }
-                }
-            }
-        }
+    fun updateEndStationQueryValue(value: TextFieldValue) {
+        _endStationQueryValue.value = value
     }
 
     private fun setShortestPath(shortestPath: ShortestPath) {

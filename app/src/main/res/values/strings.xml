@@ -12,4 +12,8 @@
     <string name="city_kyiv">Київ</string>
     <string name="city_kharkiv">Харків</string>
     <string name="button_continue">Продовжити</string>
+    <string name="btm_sh_text_path_search">Пошук маршруту</string>
+    <string name="textfield_text_where_question">Звідки?</string>
+    <string name="textfield_text_where_2take_question">Куди?</string>
+    <string name="btn_text_search">Пошук</string>
 </resources>
